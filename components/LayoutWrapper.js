@@ -1,12 +1,11 @@
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
-import Logo from '@/data/logo.svg'
-import XX from '@/data/xx.svg'
 import Link from './Link'
 import SectionContainer from './SectionContainer'
 import Footer from './Footer'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
+// import { AnimatePresence } from 'framer-motion'
 
 const LayoutWrapper = ({ children }) => {
   return (
@@ -43,6 +42,13 @@ const LayoutWrapper = ({ children }) => {
             <MobileNav />
           </div>
         </header>
+        {/* <AnimatePresence
+            exitBeforeEnter
+            initial={false}
+            onExitComplete={() => window.scrollTo(0, 0)}
+          >
+            <main className="mb-auto">{children}</main>
+          </AnimatePresence> */}
         <main className="mb-auto">{children}</main>
         <Footer />
       </div>

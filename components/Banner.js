@@ -32,7 +32,7 @@ function Banner() {
             iterations={1}
             color={'#50C878'}
           >
-            SW Intern at Tektronix
+            Incoming Software Engineer @ Tektronix
           </RoughNotation>
           <RoughNotation
             show
@@ -52,7 +52,7 @@ function Banner() {
             iterations={1}
             color={'#50C878'}
           >
-            Interested in Web3
+            Learning Web3
           </RoughNotation>
           <RoughNotation
             show
@@ -80,7 +80,7 @@ function Banner() {
           </RoughNotation>
         </Link>
         or
-        <Link className="ml-2 font-normal" href="https://shouryannikam.start.page">
+        <Link className="ml-2 font-normal" href="https://www.calendly.com/shouryannikam/meet">
           <RoughNotation
             show
             type="circle"
