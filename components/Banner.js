@@ -16,7 +16,7 @@ function Banner() {
   }
 
   return (
-    <div className="fade-in banner my-48 flex flex-1 flex-col justify-center px-6 dark:text-white lg:px-10">
+    <div className="fade-in banner my-40 flex flex-1 flex-col justify-center px-6 dark:text-white lg:px-10">
       <h1 className="text-3xl font-bold dark:text-white lg:text-5xl">
         <AnimatedText type="words" interval={0.8} duration={1} animationType={'throw'}>
           Shouryan Nikam
