@@ -5,7 +5,6 @@ import SectionContainer from './SectionContainer'
 import Footer from './Footer'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
-// import { AnimatePresence } from 'framer-motion'
 
 const LayoutWrapper = ({ children }) => {
   return (

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
+import { Sling as Hamburger } from 'hamburger-react'
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false)
@@ -25,7 +26,15 @@ const MobileNav = () => {
         aria-label="Toggle Menu"
         onClick={onToggleNav}
       >
-        <svg
+        <Hamburger
+          toggled={navShow}
+          size={29}
+          direction="left"
+          distance="md"
+          rounded
+          label="Show menu"
+        />
+        {/* <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
@@ -44,7 +53,7 @@ const MobileNav = () => {
               clipRule="evenodd"
             />
           )}
-        </svg>
+        </svg> */}
       </button>
       <div
         className={`fixed top-24 right-0 z-10 h-full w-full transform bg-gray-200 opacity-95 duration-300 ease-in-out dark:bg-gray-800 ${
@@ -58,6 +67,15 @@ const MobileNav = () => {
           onClick={onToggleNav}
         ></button>
         <nav className="fixed mt-8 h-full">
+          <Link
+            href={'/'}
+            className="px-12 py-4 text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
+            onClick={onToggleNav}
+          >
+            Home
+          </Link>
+          <br />
+          <br />
           {headerNavLinks.map((link) => (
             <div key={link.title} className="px-12 py-4">
               <Link

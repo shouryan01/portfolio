@@ -2,7 +2,6 @@ import Link from '@/components/Link'
 import { RoughNotation } from 'react-rough-notation'
 import AnimatedText from 'react-animated-text-content'
 import TextLoop from 'react-text-loop'
-import { openPopupWidget } from 'react-calendly'
 
 function Banner() {
   return (

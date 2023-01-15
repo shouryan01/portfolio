@@ -5,7 +5,6 @@ import { getAllFilesFrontMatter } from '@/lib/mdx'
 import { renderCanvas } from '@/components/renderCanvas'
 import { useEffect } from 'react'
 import Snowfall from 'react-snowfall'
-
 const MAX_DISPLAY = 5
 
 export async function getStaticProps() {
@@ -18,6 +17,7 @@ export default function Home({ posts }) {
   useEffect(() => {
     renderCanvas()
   }, [])
+
   return (
     <div>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
