@@ -13,19 +13,7 @@ export default function Footer() {
           <SocialIcon kind="github" href={siteMetadata.github} size="8" />
           <SocialIcon kind="twitter" href={siteMetadata.twitter} size="8" />
           <SocialIcon kind="youtube" href={siteMetadata.youtube} size="8" />
-          {/* <SocialIcon kind="facebook" href={siteMetadata.facebook} size="8" /> */}
         </div>
-        {/* <div className="mb-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400">
-          <div>{siteMetadata.author}</div>
-          <div>{` • `}</div>
-          <div>{`© ${new Date().getFullYear()}`}</div>
-          <div>{` • `}</div>
-          <Link href="/">{siteMetadata.title}</Link>
-        </div> */}
-
-        {/* <div className="mb-8 text-sm text-gray-500 dark:text-gray-400">
-          Made with <Emoji symbol="❤️" label="heart"/>`by Shouryan Nikam
-        </div> */}
       </div>
     </footer>
   )

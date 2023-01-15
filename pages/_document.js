@@ -1,4 +1,12 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import ChatwootWidget from '@/components/ChatwootWidget'
+import { WebChatContainer, setEnableDebug } from '@ibm-watson/assistant-web-chat-react'
+
+const webChatOptions = {
+  integrationID: '36111b20-9883-49c3-9e04-df0110afe0c3',
+  region: 'us-east',
+  serviceInstanceID: 'bf5215e7-2cf7-4fb7-8bda-09d547f261d0',
+}
 
 class MyDocument extends Document {
   render() {
@@ -23,7 +31,6 @@ class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#000000" />
           <meta name="theme-color" content="#000000" />
           <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
-
           <script
             type="text/javascript"
             id="hs-script-loader"
@@ -31,6 +38,8 @@ class MyDocument extends Document {
             defer
             src="//js-na1.hs-scripts.com/22796123.js"
           ></script>
+          <ChatwootWidget />
+          <WebChatContainer config={webChatOptions} />;
         </Head>
         <body className="bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
           <Main />
