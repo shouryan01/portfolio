@@ -24,31 +24,13 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#000000" />
           <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
 
-          {/* <script
+          <script
             type="text/javascript"
             id="hs-script-loader"
             async
             defer
             src="//js-na1.hs-scripts.com/22796123.js"
-          ></script> */}
-
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-              window.watsonAssistantChatOptions = {
-                integrationID: "36111b20-9883-49c3-9e04-df0110afe0c3", // The ID of this integration.
-                region: "us-east", // The region your integration is hosted in.
-                serviceInstanceID: "bf5215e7-2cf7-4fb7-8bda-09d547f261d0", // The ID of your service instance.
-                onLoad: function(instance) { instance.render(); }
-              };
-              setTimeout(function(){
-                const t=document.createElement('script');
-                t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
-                document.head.appendChild(t);
-              });
-              `,
-            }}
-          />
+          ></script>
         </Head>
         <body className="bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
           <Main />
