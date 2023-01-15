@@ -5,8 +5,30 @@ import SectionContainer from './SectionContainer'
 import Footer from './Footer'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
+import CmdPalette from './CmdPalette'
+import { useState, useEffect } from 'react'
 
 const LayoutWrapper = ({ children }) => {
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.metaKey && e.key === 'k') {
+        e.preventDefault()
+        e.stopPropagation()
+
+        setOpen((currentValue) => {
+          return !currentValue
+        })
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   return (
     <SectionContainer>
       <div className="flex h-screen flex-col justify-between">
@@ -41,14 +63,10 @@ const LayoutWrapper = ({ children }) => {
             <MobileNav />
           </div>
         </header>
-        {/* <AnimatePresence
-            exitBeforeEnter
-            initial={false}
-            onExitComplete={() => window.scrollTo(0, 0)}
-          >
-            <main className="mb-auto">{children}</main>
-          </AnimatePresence> */}
-        <main className="mb-auto">{children}</main>
+        <main className="mb-auto">
+          {children}
+          <CmdPalette open={open} setOpen={setOpen} />
+        </main>
         <Footer />
       </div>
     </SectionContainer>

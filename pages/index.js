@@ -5,7 +5,6 @@ import { getAllFilesFrontMatter } from '@/lib/mdx'
 import { renderCanvas } from '@/components/renderCanvas'
 import { useEffect } from 'react'
 import Snowfall from 'react-snowfall'
-const MAX_DISPLAY = 5
 
 export async function getStaticProps() {
   const posts = await getAllFilesFrontMatter('blog')

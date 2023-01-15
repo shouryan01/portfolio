@@ -2,8 +2,19 @@ import Link from '@/components/Link'
 import { RoughNotation } from 'react-rough-notation'
 import AnimatedText from 'react-animated-text-content'
 import TextLoop from 'react-text-loop'
+import { useEffect, useState } from 'react'
+import CmdPalette from '@/components/CmdPalette'
+import ShowPrompt from './ShowPrompt'
 
 function Banner() {
+  const [open, setOpen] = useState(false)
+
+  function toggle() {
+    setOpen((currentValue) => {
+      return !currentValue
+    })
+  }
+
   return (
     <div className="fade-in banner my-48 flex flex-1 flex-col justify-center px-6 dark:text-white lg:px-10">
       <h1 className="text-3xl font-bold dark:text-white lg:text-5xl">
@@ -90,7 +101,14 @@ function Banner() {
             contact me.
           </RoughNotation>
         </Link>
+        <br />
+        <br />
+        <br />
+        <button onClick={() => setOpen(true)}>
+          <ShowPrompt></ShowPrompt>
+        </button>
       </p>
+      <CmdPalette open={open} setOpen={setOpen} />
     </div>
   )
 }
