@@ -7,9 +7,9 @@ export default function DisplayKBar() {
 
   return (
     <KBarPortal>
-      <KBarPositioner className="bg-white bg-opacity-0 backdrop-blur-md dark:bg-black dark:bg-opacity-50 ">
+      <KBarPositioner className="bg-white bg-opacity-0 backdrop-blur-md dark:bg-black dark:bg-opacity-50">
         <KBarAnimator className="mt-6 w-full max-w-[550px]">
-          <div className="rounded-xl bg-white p-4 shadow-2xl shadow-gray-500 dark:bg-gray-900">
+          <div className="rounded-xl bg-white p-4 shadow-2xl shadow-gray-500 dark:bg-gray-900 dark:text-white">
             <div className="relative">
               <KBarSearch
                 className="block w-full border-0 bg-transparent p-3 text-lg focus:outline-none"
@@ -43,7 +43,7 @@ export default function DisplayKBar() {
                   <span className="text-xs text-gray-500 dark:text-gray-300">Back</span>
                 </div>
               </div>
-              <Kbd className="absolute right-3 top-2 -translate-y-1/2 transform p-1">ESC</Kbd>
+              <Kbd className="absolute right-3 top-2 -translate-y-0.5 transform p-1">ESC</Kbd>
             </div>
 
             <KBarResults
@@ -54,10 +54,10 @@ export default function DisplayKBar() {
                 ) : (
                   <div
                     className={
-                      'flex cursor-pointer items-center rounded-lg p-3 text-gray-600 transition-all dark:bg-zinc-900 dark:text-gray-400' +
+                      'flex cursor-pointer items-center rounded-lg p-3 transition-all dark:text-white' +
                       (active
-                        ? 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-50'
-                        : 'bg-transparent')
+                        ? 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                        : 'bg-white text-gray-600 dark:bg-gray-900 dark:text-gray-400')
                     }
                   >
                     {item.name}
@@ -81,7 +81,7 @@ export default function DisplayKBar() {
                   </div>
                 )
               }
-              className="mt-2 border-0 border-t border-solid border-gray-200 pt-4 dark:border-gray-800"
+              className="scrollbar-hide mt-2 border-0 border-t border-solid border-gray-200 pt-4 dark:border-gray-800"
             />
           </div>
         </KBarAnimator>
