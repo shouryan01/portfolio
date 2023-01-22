@@ -9,9 +9,12 @@ import { KBarProvider } from 'kbar'
 import DisplayKBar from './DisplayKBar'
 import { useTheme } from 'next-themes'
 import Router from 'next/router'
+import { useKBar, VisualState } from 'kbar'
+
+// import { KBarProvider, KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, useMatches } from "kbar";
 
 const LayoutWrapper = ({ children }) => {
-  // const [open, setOpen] = useState(false)
+  // // const [open, setOpen] = useState(false)
 
   // useEffect(() => {
   //   function handleKeyDown(e) {
@@ -24,6 +27,47 @@ const LayoutWrapper = ({ children }) => {
   //       })
   //     }
   //   }
+  // useEffect(() => {
+  //   function handleKeyDown(e) {
+  //     if (e.metaKey && e.key === 'k') {
+  //       e.preventDefault()
+  //       e.stopPropagation()
+
+  //       setOpen((currentValue) => {
+  //         return !currentValue
+  //       })
+  //     }
+  //   }
+  //   document.addEventListener('keydown', handleKeyDown)
+  //   return () => {
+  //     document.removeEventListener('keydown', handleKeyDown)
+  //   }
+  // }, [])
+  // const actions = [
+  //   {
+  //     id: "blog",
+  //     name: "Blog",
+  //     shortcut: ["b"],
+  //     keywords: "writing words",
+  //     perform: () => (window.location.pathname = "blog"),
+  //   },
+  //   {
+  //     id: "contact",
+  //     name: "Contact",
+  //     shortcut: ["c"],
+  //     keywords: "email",
+  //     perform: () => (window.location.pathname = "contact"),
+  //   },
+  // ]
+
+  // const [stuck, setStuck] = useState(false)
+  // const ref = useRef()
+  // const stuckClasses =
+  //   'py-2 sticky top-n-1 z-50 transition-all backdrop isSticky mx-auto border-b border-slate-900/10 dark:border-slate-300/10 mb-16 w-full'
+  // const unstuckClasses =
+  //   'py-2 md:py-8 sticky top-n-1 z-50 transition-all backdrop mx-auto border-b border-b-0 border-slate-900/10 dark:border-slate-300/10 mb-16 w-full'
+
+  // const classes = stuck ? stuckClasses : unstuckClasses
 
   //   document.addEventListener('keydown', handleKeyDown)
   //   return () => {
@@ -124,14 +168,9 @@ const LayoutWrapper = ({ children }) => {
           <div>
             <Link href="/" aria-label={siteMetadata.headerTitle}>
               <div className="flex items-center justify-between">
-                <div className="mr-3">{/* <Logo /> */}</div>
-                {typeof siteMetadata.headerTitle === 'string' ? (
-                  <div className="hidden h-6 text-2xl font-semibold sm:block">
-                    {siteMetadata.headerTitle}
-                  </div>
-                ) : (
-                  siteMetadata.headerTitle
-                )}
+                <div className="h-6 text-3xl font-semibold decoration-4 hover:underline sm:block">
+                  {siteMetadata.headerTitle}
+                </div>
               </div>
             </Link>
           </div>

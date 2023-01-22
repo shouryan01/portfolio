@@ -29,15 +29,15 @@ class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#000000" />
           <meta name="theme-color" content="#000000" />
           <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
-          <script
+          {/* <script
             type="text/javascript"
             id="hs-script-loader"
             async
             defer
             src="//js-na1.hs-scripts.com/22796123.js"
-          ></script>
+          ></script> */}
         </Head>
-        <body className="bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
+        <body className="bg-white text-black antialiased dark:bg-gray-900">
           <Main />
           <NextScript />
         </body>

@@ -59,3 +59,26 @@ input:-webkit-autofill:focus {
     transform: translate(13px, -1px) skew(-13deg);
   }
 }
+
+header.isSticky .title {
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.leftNav {
+  opacity: 0;
+}
+
+.leftNav.isSticky {
+  opacity: 1;
+  transition: 0.5s;
+}
+
+.table-of-contents {
+  position: sticky;
+  display: none;
+}
+
+.leftNav.isSticky .table-of-contents {
+  display: block;
+}
