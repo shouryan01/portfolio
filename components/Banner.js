@@ -2,18 +2,20 @@ import Link from '@/components/Link'
 import { RoughNotation } from 'react-rough-notation'
 import AnimatedText from 'react-animated-text-content'
 import TextLoop from 'react-text-loop'
-import { useEffect, useState } from 'react'
-import CmdPalette from '@/components/CmdPalette'
+// import { useEffect, useState } from 'react'
+// import CmdPalette from '@/components/CmdPalette'
+import { useKBar } from 'kbar'
 import ShowPrompt from './ShowPrompt'
 
 function Banner() {
-  const [open, setOpen] = useState(false)
+  // const [open, setOpen] = useState(false)
 
-  function toggle() {
-    setOpen((currentValue) => {
-      return !currentValue
-    })
-  }
+  // function toggle() {
+  //   setOpen((currentValue) => {
+  //     return !currentValue
+  //   })
+  // }
+  const { query } = useKBar()
 
   return (
     <div className="fade-in banner my-40 flex flex-1 flex-col justify-center px-6 dark:text-white lg:px-10">
@@ -104,11 +106,11 @@ function Banner() {
         <br />
         <br />
         <br />
-        <button onClick={() => setOpen(true)}>
+        <button onClick={query.toggle}>
           <ShowPrompt></ShowPrompt>
         </button>
       </p>
-      <CmdPalette open={open} setOpen={setOpen} />
+      {/* <CmdPalette open={open} setOpen={setOpen} /> */}
     </div>
   )
 }

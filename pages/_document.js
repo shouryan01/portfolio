@@ -1,6 +1,4 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-import ChatwootWidget from '@/components/ChatwootWidget'
-import { WebChatContainer, setEnableDebug } from '@ibm-watson/assistant-web-chat-react'
 
 const webChatOptions = {
   integrationID: '36111b20-9883-49c3-9e04-df0110afe0c3',
@@ -38,8 +36,6 @@ class MyDocument extends Document {
             defer
             src="//js-na1.hs-scripts.com/22796123.js"
           ></script>
-          <ChatwootWidget />
-          <WebChatContainer config={webChatOptions} />;
         </Head>
         <body className="bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
           <Main />
