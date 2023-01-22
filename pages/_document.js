@@ -1,8 +1,15 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+
+const webChatOptions = {
+  integrationID: '36111b20-9883-49c3-9e04-df0110afe0c3',
+  region: 'us-east',
+  serviceInstanceID: 'bf5215e7-2cf7-4fb7-8bda-09d547f261d0',
+}
+
 class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en" className="scroll-smooth">
+      <Html lang="en" className="scrollbar-hide scroll-smooth">
         <Head>
           <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png" />
           <link
@@ -23,7 +30,7 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#000000" />
           <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
         </Head>
-        <body className="bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
+        <body className="bg-white text-black antialiased dark:bg-gray-900">
           <Main />
           <NextScript />
         </body>

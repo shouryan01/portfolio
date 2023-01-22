@@ -2,11 +2,23 @@ import Link from '@/components/Link'
 import { RoughNotation } from 'react-rough-notation'
 import AnimatedText from 'react-animated-text-content'
 import TextLoop from 'react-text-loop'
-import { openPopupWidget } from 'react-calendly'
+// import { useEffect, useState } from 'react'
+// import CmdPalette from '@/components/CmdPalette'
+import { useKBar } from 'kbar'
+import ShowPrompt from './ShowPrompt'
 
 function Banner() {
+  // const [open, setOpen] = useState(false)
+
+  // function toggle() {
+  //   setOpen((currentValue) => {
+  //     return !currentValue
+  //   })
+  // }
+  const { query } = useKBar()
+
   return (
-    <div className="fade-in banner my-48 flex flex-1 flex-col justify-center px-6 dark:text-white lg:px-10">
+    <div className="fade-in banner my-40 flex flex-1 flex-col justify-center px-6 dark:text-white lg:px-10">
       <h1 className="text-3xl font-bold dark:text-white lg:text-5xl">
         <AnimatedText type="words" interval={0.8} duration={1} animationType={'throw'}>
           Shouryan Nikam
@@ -32,7 +44,7 @@ function Banner() {
             iterations={1}
             color={'#50C878'}
           >
-            SW Intern at Tektronix
+            Incoming Software Engineer @ Tektronix
           </RoughNotation>
           <RoughNotation
             show
@@ -52,7 +64,7 @@ function Banner() {
             iterations={1}
             color={'#50C878'}
           >
-            Interested in Web3
+            Learning Web3
           </RoughNotation>
           <RoughNotation
             show
@@ -80,7 +92,7 @@ function Banner() {
           </RoughNotation>
         </Link>
         or
-        <Link className="ml-2 font-normal" href="https://shouryannikam.start.page">
+        <Link className="ml-2 font-normal" href="https://www.calendly.com/shouryannikam/meet">
           <RoughNotation
             show
             type="circle"
@@ -91,7 +103,14 @@ function Banner() {
             contact me.
           </RoughNotation>
         </Link>
+        <br />
+        <br />
+        <br />
+        <button onClick={query.toggle}>
+          <ShowPrompt></ShowPrompt>
+        </button>
       </p>
+      {/* <CmdPalette open={open} setOpen={setOpen} /> */}
     </div>
   )
 }
