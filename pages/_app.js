@@ -20,12 +20,12 @@ export default function App({ Component, pageProps }) {
   const { theme, setTheme } = useTheme()
 
   const actions = [
-    {
-      id: 'email',
-      name: 'Email Shouryan',
-      section: 'General',
-      perform: () => Router.push('mailto:snnikam@umich.edu'),
-    },
+    // {
+    //   id: 'email',
+    //   name: 'Email Shouryan',
+    //   section: 'General',
+    //   perform: () => Router.push('mailto:snnikam@umich.edu'),
+    // },
     // {
     //   id: 'copy_url',
     //   name: 'Copy Website URL',
