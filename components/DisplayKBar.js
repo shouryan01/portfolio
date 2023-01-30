@@ -56,7 +56,7 @@ export default function DisplayKBar() {
                     className={
                       'flex cursor-pointer items-center rounded-lg p-3 transition-all' +
                       (active
-                        ? 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                        ? 'bg-gray-200 bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
                         : 'bg-white text-gray-600 dark:bg-gray-900 dark:text-gray-400')
                     }
                   >
