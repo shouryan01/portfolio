@@ -26,12 +26,12 @@ export default function App({ Component, pageProps }) {
       section: 'General',
       perform: () => Router.push('mailto:snnikam@umich.edu'),
     },
-    {
-      id: 'copy_url',
-      name: 'Copy Website URL',
-      section: 'General',
-      perform: () => navigator.clipboard.writeText('https://www.shouryannikam.me'),
-    },
+    // {
+    //   id: 'copy_url',
+    //   name: 'Copy Website URL',
+    //   section: 'General',
+    //   perform: () => navigator.clipboard.writeText('https://www.shouryannikam.me'),
+    // },
     {
       id: 'theme_light',
       name: 'Light Theme',
