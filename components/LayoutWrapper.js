@@ -18,15 +18,56 @@ const LayoutWrapper = ({ children }) => {
 
   const actions = [
     {
+      id: 'navigation',
+      section: 'Navigation',
+      name: '🧭 Navigation',
+    },
+    {
+      id: 'home',
+      name: '🏠 Home',
+      section: 'Navigation',
+      parent: 'navigation',
+      perform: () => Router.push('/'),
+    },
+    {
+      id: 'Blog',
+      name: '✍️ Blog',
+      section: 'Navigation',
+      parent: 'navigation',
+      perform: () => Router.push('/blog'),
+    },
+    {
+      id: 'Projects',
+      name: '💡 Projects',
+      section: 'Navigation',
+      parent: 'navigation',
+      perform: () => Router.push('/projects'),
+    },
+    {
+      id: 'About',
+      name: '👤 About',
+      section: 'Navigation',
+      parent: 'navigation',
+      perform: () => Router.push('/about'),
+    },
+
+    {
+      id: 'general',
+      name: '🛠 Tools',
+      section: 'General',
+    },
+    {
       id: 'email',
       name: '✉️ Email Shouryan',
-      section: 'General',
+      section: 'Tools',
+      parent: 'general',
       perform: () => Router.push('mailto:snnikam@umich.edu'),
     },
     {
       id: 'copy_url',
       name: '📋 Copy Website URL',
-      section: 'General',
+      section: 'Tools',
+      parent: 'general',
       perform: () => {
         navigator.clipboard.writeText('https://www.shouryannikam.me')
         alert('Copied to clipboard!')
@@ -53,53 +94,38 @@ const LayoutWrapper = ({ children }) => {
         setTheme('dark')
       },
     },
-    {
-      id: 'home',
-      name: '🏠 Home',
-      section: 'Navigation',
-      perform: () => Router.push('/'),
-    },
-    {
-      id: 'Blog',
-      name: '✍️ Blog',
-      section: 'Navigation',
-      perform: () => Router.push('/blog'),
-    },
-    {
-      id: 'Projects',
-      name: '💡 Projects',
-      section: 'Navigation',
-      perform: () => Router.push('/projects'),
-    },
-    {
-      id: 'About',
-      name: '👤 About',
-      section: 'Navigation',
-      perform: () => Router.push('/about'),
-    },
 
+    {
+      id: 'links',
+      name: '🔗 Social Media Links',
+      section: 'Social Media Links',
+    },
     {
       id: 'linkedin',
       name: '💼 LinkedIn',
       section: 'Social Media Links',
+      parent: 'links',
       perform: () => window.open('https://www.linkedin.com/in/shouryannikam', '_blank'),
     },
     {
       id: 'github',
       name: '💻 GitHub',
       section: 'Social Media Links',
+      parent: 'links',
       perform: () => window.open('https://www.github.com/shouryan01', '_blank'),
     },
     {
       id: 'twitter',
       name: '🐦 Twitter',
       section: 'Social Media Links',
+      parent: 'links',
       perform: () => window.open('https://www.twitter.com/shouryannikam', '_blank'),
     },
     {
       id: 'youtube',
       name: '📹 YouTube',
       section: 'Social Media Links',
+      parent: 'links',
       perform: () => window.open('https://www.youtube.com/c/ShouryanNikam', '_blank'),
     },
   ]
