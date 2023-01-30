@@ -20,13 +20,13 @@ export default function DisplayKBar() {
                   <span className="rounded bg-gray-100 py-0.5 px-1.5 text-xs text-gray-700">
                     <kbd className="font-medium">⌘ K</kbd>
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-300">Toggle Menu, </span>
+                  <span className="text-xs text-gray-700 dark:text-gray-300">Toggle Menu, </span>
                 </div>
                 <div className="ml-2 flex items-center space-x-2">
                   <span className="rounded bg-gray-100 py-0.5 px-1.5 text-sm text-gray-700">
                     <kbd className="font-bold">&#8593; &#8595; </kbd>
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-300">
+                  <span className="text-xs text-gray-700 dark:text-gray-300">
                     Move Between Options
                   </span>
                 </div>
@@ -34,13 +34,13 @@ export default function DisplayKBar() {
                   <span className="rounded bg-gray-100 py-0.5 px-1.5 text-xs text-gray-700">
                     <kbd className="font-sans">&#9166;</kbd>
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-300">Select Option</span>
+                  <span className="text-xs text-gray-700 dark:text-gray-300">Select Option</span>
                 </div>
                 <div className="ml-2 flex items-center space-x-2">
                   <span className="rounded bg-gray-100 py-0.5 px-1.5 text-xs text-gray-700">
                     <kbd className="font-sans">&#9003;</kbd>
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-300">Back</span>
+                  <span className="text-xs text-gray-700 dark:text-gray-300">Back</span>
                 </div>
               </div>
               <Kbd className="absolute right-3 top-2 -translate-y-0.5 transform p-1">ESC</Kbd>
@@ -54,7 +54,7 @@ export default function DisplayKBar() {
                 ) : (
                   <div
                     className={
-                      'flex cursor-pointer items-center rounded-lg p-3 transition-all dark:text-white' +
+                      'flex cursor-pointer items-center rounded-lg p-3 transition-all' +
                       (active
                         ? 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
                         : 'bg-white text-gray-600 dark:bg-gray-900 dark:text-gray-400')

@@ -14,66 +14,6 @@ import { useKBar, VisualState } from 'kbar'
 // import { KBarProvider, KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, useMatches } from "kbar";
 
 const LayoutWrapper = ({ children }) => {
-  // // const [open, setOpen] = useState(false)
-
-  // useEffect(() => {
-  //   function handleKeyDown(e) {
-  //     if (e.metaKey && e.key === 'k') {
-  //       e.preventDefault()
-  //       e.stopPropagation()
-
-  //       setOpen((currentValue) => {
-  //         return !currentValue
-  //       })
-  //     }
-  //   }
-  // useEffect(() => {
-  //   function handleKeyDown(e) {
-  //     if (e.metaKey && e.key === 'k') {
-  //       e.preventDefault()
-  //       e.stopPropagation()
-
-  //       setOpen((currentValue) => {
-  //         return !currentValue
-  //       })
-  //     }
-  //   }
-  //   document.addEventListener('keydown', handleKeyDown)
-  //   return () => {
-  //     document.removeEventListener('keydown', handleKeyDown)
-  //   }
-  // }, [])
-  // const actions = [
-  //   {
-  //     id: "blog",
-  //     name: "Blog",
-  //     shortcut: ["b"],
-  //     keywords: "writing words",
-  //     perform: () => (window.location.pathname = "blog"),
-  //   },
-  //   {
-  //     id: "contact",
-  //     name: "Contact",
-  //     shortcut: ["c"],
-  //     keywords: "email",
-  //     perform: () => (window.location.pathname = "contact"),
-  //   },
-  // ]
-
-  // const [stuck, setStuck] = useState(false)
-  // const ref = useRef()
-  // const stuckClasses =
-  //   'py-2 sticky top-n-1 z-50 transition-all backdrop isSticky mx-auto border-b border-slate-900/10 dark:border-slate-300/10 mb-16 w-full'
-  // const unstuckClasses =
-  //   'py-2 md:py-8 sticky top-n-1 z-50 transition-all backdrop mx-auto border-b border-b-0 border-slate-900/10 dark:border-slate-300/10 mb-16 w-full'
-
-  // const classes = stuck ? stuckClasses : unstuckClasses
-
-  //   document.addEventListener('keydown', handleKeyDown)
-  //   return () => {
-  //     document.removeEventListener('keydown', handleKeyDown)
-  //   }
-  // }, [])
   const { theme, setTheme } = useTheme()
 
   const actions = [
@@ -87,7 +27,10 @@ const LayoutWrapper = ({ children }) => {
       id: 'copy_url',
       name: '📋 Copy Website URL',
       section: 'General',
-      perform: () => navigator.clipboard.writeText('https://www.shouryannikam.me'),
+      perform: () => {
+        navigator.clipboard.writeText('https://www.shouryannikam.me')
+        alert('Copied to clipboard!')
+      },
     },
     {
       id: 'theme',
@@ -195,7 +138,6 @@ const LayoutWrapper = ({ children }) => {
             <DisplayKBar />
             {children}
           </KBarProvider>
-          {/* <CmdPalette open={open} setOpen={setOpen} /> */}
         </main>
         <Footer />
       </div>
