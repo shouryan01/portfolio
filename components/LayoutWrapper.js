@@ -138,7 +138,6 @@ const LayoutWrapper = ({ children }) => {
             <DisplayKBar />
             {children}
           </KBarProvider>
-          {/* <CmdPalette open={open} setOpen={setOpen} /> */}
         </main>
         <Footer />
       </div>
