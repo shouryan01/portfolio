@@ -8,7 +8,7 @@ export default function DisplayKBar() {
   return (
     <KBarPortal>
       <KBarPositioner className="bg-white bg-opacity-0 backdrop-blur-md dark:bg-black dark:bg-opacity-50">
-        <KBarAnimator className="mt-6 w-full max-w-[550px]">
+        <KBarAnimator className="mt-6 w-full max-w-[560px]">
           <div className="rounded-xl bg-white p-4 shadow-2xl shadow-gray-500 dark:bg-gray-900 dark:text-white">
             <div className="relative">
               <KBarSearch

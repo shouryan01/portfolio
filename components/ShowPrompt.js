@@ -19,7 +19,7 @@ export default function ShowPrompt(open, setOpen) {
         <span className="text-lg">Press</span>{' '}
         {ua.isMac && <span className="rounded-md bg-gray-300 p-1 text-lg text-gray-900">⌘</span>}{' '}
         {ua.isWindows && (
-          <span className="rounded-md bg-gray-300 p-1 text-lg text-gray-900">ctrl</span>
+          <span className="rounded-md bg-gray-300 p-1 text-lg text-gray-900">Ctrl</span>
         )}{' '}
         <span className="text-lg">+ </span>
         <span className="rounded-md bg-gray-300 p-1 text-lg text-gray-900">K</span>{' '}

@@ -2,9 +2,11 @@ import { useState } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
 import { Sling as Hamburger } from 'hamburger-react'
+import { useRouter } from 'next/router'
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false)
+  const router = useRouter()
 
   const onToggleNav = () => {
     setNavShow((status) => {
@@ -37,7 +39,7 @@ const MobileNav = () => {
       </button>
 
       <div
-        className={`fixed top-24 right-0 z-10 h-full w-full transform duration-300 ease-in-out dark:bg-gray-800 ${
+        className={`fixed top-24 right-0 z-10 h-full w-full transform duration-300 ease-in-out ${
           navShow ? 'translate-x-0' : 'translate-x-full'
         } backdrop-blur-lg`}
       >
@@ -48,26 +50,32 @@ const MobileNav = () => {
           onClick={onToggleNav}
         ></button>
         <nav className="fixed mt-8 h-full">
-          <Link
-            href={'/'}
-            className="px-12 py-4 text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
-            onClick={onToggleNav}
-          >
-            Home
-          </Link>
-          <br />
-          <br />
-          {headerNavLinks.map((link) => (
-            <div key={link.title} className="px-12 py-4">
-              <Link
-                href={link.href}
-                className="text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
-                onClick={onToggleNav}
-              >
-                {link.title}
-              </Link>
-            </div>
-          ))}
+          {headerNavLinks.map(({ title, href }) => {
+            var underline = false
+
+            if (href !== '/') {
+              underline = router.pathname.includes(href)
+            } else {
+              underline = router.pathname === href
+            }
+
+            return (
+              <div key={title} className="px-12 py-4">
+                <Link
+                  href={href === 'home' ? '/' : `/${href}`}
+                  onClick={() => setNavShow(!navShow)}
+                  className={`text-2xl tracking-widest text-gray-900 hover:text-teal-500 dark:text-gray-100 
+                  ${underline ? 'font-extrabold text-teal-500 dark:text-teal-500' : ''}
+                  hover:font-extrabold
+                  dark:hover:text-teal-500
+                  `}
+                  aria-label={title}
+                >
+                  {title}
+                </Link>
+              </div>
+            )
+          })}
         </nav>
       </div>
     </div>
