@@ -9,7 +9,7 @@ export default function DisplayKBar() {
     <KBarPortal>
       <KBarPositioner className="bg-white bg-opacity-0 backdrop-blur-md dark:bg-black dark:bg-opacity-50">
         <KBarAnimator className="mt-6 w-full max-w-[560px]">
-          <div className="rounded-xl bg-white p-4 shadow-2xl shadow-gray-500 dark:bg-gray-900 dark:text-white">
+          <div className="rounded-xl bg-white p-4 shadow-2xl shadow-gray-500 dark:bg-gray-800 dark:text-white">
             <div className="relative">
               <KBarSearch
                 className="block w-full border-0 bg-transparent p-3 text-lg focus:outline-none"
@@ -56,8 +56,8 @@ export default function DisplayKBar() {
                     className={
                       'flex cursor-pointer items-center rounded-lg p-3 transition-all' +
                       (active
-                        ? 'bg-gray-200 bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
-                        : 'bg-white text-gray-600 dark:bg-gray-900 dark:text-gray-400')
+                        ? 'bg-gray-200 bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white'
+                        : 'bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-300')
                     }
                   >
                     {item.name}

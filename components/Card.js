@@ -1,8 +1,9 @@
 import Image from './Image'
 import Link from './Link'
+import SocialIcon from '@/components/social-icons'
 
-const Card = ({ title, description, imgSrc, href }) => (
-  <div className="md p-4 md:w-1/2" style={{ maxWidth: '544px' }}>
+const Card = ({ title, description, imgSrc, href, github }) => (
+  <div className="md p-4 duration-300 hover:scale-105 md:w-1/2" style={{ maxWidth: '544px' }}>
     <div
       className={`${
         imgSrc && 'h-full'

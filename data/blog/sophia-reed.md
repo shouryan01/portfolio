@@ -2,7 +2,7 @@
 title: 'Sophia Reed'
 date: '2022-07-30'
 lastmod: '2022-07-30'
-tags: ['alumni']
+tags: ['alumni', 'interview']
 draft: false
 summary: 'Summary of my talk with Sophia and what I learned from her.'
 authors: ['default']

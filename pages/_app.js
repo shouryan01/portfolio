@@ -9,6 +9,7 @@ import Analytics from '@/components/analytics'
 import LayoutWrapper from '@/components/LayoutWrapper'
 import { ClientReload } from '@/components/ClientReload'
 import LoadProgressBar from '@/components/LoadingBarIndex'
+import ProgressBar from 'react-scroll-progress-bar'
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 const isSocket = process.env.SOCKET
@@ -19,6 +20,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme={siteMetadata.theme}>
+      <ProgressBar height="5px" bgcolor="#29beae" />
       <Head>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
       </Head>

@@ -92,7 +92,7 @@ function Banner() {
           </RoughNotation>
         </Link>
         or
-        <Link className="ml-2 font-normal" href="https://www.calendly.com/shouryannikam/meet">
+        <Link className="ml -2 font-normal" href="https://www.calendly.com/shouryannikam/meet">
           <RoughNotation
             show
             type="circle"
@@ -100,7 +100,7 @@ function Banner() {
             animationDuration={1200}
             color={'violet'}
           >
-            contact me.
+            talk to me.
           </RoughNotation>
         </Link>
         <br />

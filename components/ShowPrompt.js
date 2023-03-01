@@ -15,7 +15,7 @@ export default function ShowPrompt(open, setOpen) {
     return <button>Tap to start →</button>
   } else {
     return (
-      <button>
+      <button className="duration-300 hover:scale-125">
         <span className="text-lg">Press</span>{' '}
         {ua.isMac && <span className="rounded-md bg-gray-300 p-1 text-lg text-gray-900">⌘</span>}{' '}
         {ua.isWindows && (

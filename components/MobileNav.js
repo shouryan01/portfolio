@@ -62,7 +62,7 @@ const MobileNav = () => {
             return (
               <div key={title} className="px-12 py-4">
                 <Link
-                  href={href === 'home' ? '/' : `/${href}`}
+                  href={href === 'home' ? '/' : `${href}`}
                   onClick={() => setNavShow(!navShow)}
                   className={`text-2xl tracking-widest text-gray-900 hover:text-teal-500 dark:text-gray-100 
                   ${underline ? 'font-extrabold text-teal-500 dark:text-teal-500' : ''}

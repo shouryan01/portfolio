@@ -12,12 +12,13 @@ const ThemeSwitch = () => {
   return (
     <motion.button
       whileHover={{
-        scale: 1.2,
+        scale: 1.5,
         transition: { duration: 0.2 },
+        rotate: 360,
       }}
       whileTap={{
-        scale: 0.7,
-        rotate: 360,
+        scale: 0.7, //window.innerWidth / 14.3,
+        rotate: -360,
         transition: { duration: 0.2 },
       }}
       aria-label="Toggle Dark Mode"
