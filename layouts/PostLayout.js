@@ -26,6 +26,7 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
 
   return (
     <SectionContainer>
+      {/* <ProgressBar height="7px" bgcolor="#29BEAE" /> */}
       <BlogSEO
         url={`${siteMetadata.siteUrl}/blog/${slug}`}
         authorDetails={authorDetails}

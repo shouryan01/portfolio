@@ -9,13 +9,11 @@ import { KBarProvider } from 'kbar'
 import DisplayKBar from './DisplayKBar'
 import { useTheme } from 'next-themes'
 import Router from 'next/router'
-import { useKBar, VisualState } from 'kbar'
-
-// import { KBarProvider, KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, useMatches } from "kbar";
+import DropMenu from './DropMenu'
+// #29beae
 
 const LayoutWrapper = ({ children }) => {
   const { theme, setTheme } = useTheme()
-
   const actions = [
     {
       id: 'navigation',
@@ -69,7 +67,7 @@ const LayoutWrapper = ({ children }) => {
       section: 'Tools',
       parent: 'general',
       perform: () => {
-        navigator.clipboard.writeText('https://www.shouryannikam.me')
+        navigator.clipboard.writeText('https://www.shouryannikam.com')
         alert('Copied to clipboard!')
       },
     },
@@ -137,7 +135,7 @@ const LayoutWrapper = ({ children }) => {
           <div>
             <Link href="/" aria-label={siteMetadata.headerTitle}>
               <div className="flex items-center justify-between">
-                <div className="h-6 text-3xl font-semibold decoration-4 hover:underline sm:block">
+                <div className="h-6 text-3xl font-semibold decoration-4 duration-300 hover:scale-125 hover:text-teal-500 sm:block">
                   {siteMetadata.headerTitle}
                 </div>
               </div>
@@ -145,17 +143,23 @@ const LayoutWrapper = ({ children }) => {
           </div>
           <div className="flex items-center text-base leading-5">
             <div className="hidden sm:block">
-              {headerNavLinks.map((link) => (
-                <Link
-                  key={link.title}
-                  href={link.href}
-                  className="rounded-xl p-1 font-medium text-gray-900 hover:bg-gray-200 dark:text-gray-100 dark:hover:bg-gray-700 sm:p-4"
-                >
-                  {link.title}
-                </Link>
-              ))}
+              {headerNavLinks.map(
+                (link) =>
+                  link.title !== 'Home' &&
+                  link.title !== 'Books' &&
+                  link.title !== 'Quotes' && (
+                    <Link
+                      key={link.title}
+                      href={link.href}
+                      className="rounded-xl p-1 font-medium text-gray-900 duration-300 hover:bg-gray-200 dark:text-gray-100 dark:hover:bg-gray-700 sm:p-4"
+                    >
+                      {link.title}
+                    </Link>
+                  )
+              )}
             </div>
             <ThemeSwitch />
+            <DropMenu />
             <MobileNav />
           </div>
         </header>

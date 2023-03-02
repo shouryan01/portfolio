@@ -1,11 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
-const webChatOptions = {
-  integrationID: '36111b20-9883-49c3-9e04-df0110afe0c3',
-  region: 'us-east',
-  serviceInstanceID: 'bf5215e7-2cf7-4fb7-8bda-09d547f261d0',
-}
-
 class MyDocument extends Document {
   render() {
     return (

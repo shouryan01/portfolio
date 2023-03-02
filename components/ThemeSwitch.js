@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
 const { motion } = require('framer-motion')
+import useSound from 'use-sound'
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme, resolvedTheme } = useTheme()
+  const [ThemeSound] = useSound('/static/sounds/switch_theme_sound.mp3')
 
   // When mounted on client, now we can show the UI
   useEffect(() => setMounted(true), [])
@@ -12,18 +14,22 @@ const ThemeSwitch = () => {
   return (
     <motion.button
       whileHover={{
-        scale: 1.2,
+        scale: 1.5,
         transition: { duration: 0.2 },
+        rotate: 360,
       }}
       whileTap={{
-        scale: 0.7,
-        rotate: 360,
+        scale: 0.7, //window.innerWidth / 14.3,
+        rotate: -360,
         transition: { duration: 0.2 },
       }}
       aria-label="Toggle Dark Mode"
       type="button"
       className="ml-1 mr-1 h-8 w-8 rounded p-1 sm:ml-4"
-      onClick={() => setTheme(theme === 'dark' || resolvedTheme === 'dark' ? 'light' : 'dark')}
+      onClick={() => {
+        setTheme(theme === 'dark' || resolvedTheme === 'dark' ? 'light' : 'dark')
+        ThemeSound()
+      }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

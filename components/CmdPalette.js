@@ -24,7 +24,7 @@ const Example = ({ open, setOpen }) => {
             children: 'Copy Website URL',
             icon: 'DocumentDuplicateIcon',
             onClick: () => {
-              navigator.clipboard.writeText('https://www.shouryannikam.me')
+              navigator.clipboard.writeText('https://www.shouryannikam.com')
             },
           },
         ],

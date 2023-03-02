@@ -13,7 +13,6 @@ import ProgressBar from 'react-scroll-progress-bar'
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 const isSocket = process.env.SOCKET
-import Router from 'next/router'
 import { useTheme } from 'next-themes'
 
 export default function App({ Component, pageProps }) {
@@ -21,6 +20,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme={siteMetadata.theme}>
+      <ProgressBar height="5px" bgcolor="#29beae" />
       <Head>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
       </Head>
