@@ -1,13 +1,12 @@
 import { KBarResults, useMatches, KBarPortal, KBarPositioner, KBarAnimator, KBarSearch } from 'kbar'
 import Kbd from './Kbd'
-import { useTheme } from 'next-themes'
 
 export default function DisplayKBar() {
   const { results } = useMatches()
 
   return (
     <KBarPortal>
-      <KBarPositioner className="bg-white bg-opacity-0 backdrop-blur-md dark:bg-black dark:bg-opacity-50">
+      <KBarPositioner className="z-[101] bg-white bg-opacity-0 backdrop-blur-md dark:bg-black dark:bg-opacity-50">
         <KBarAnimator className="mt-6 w-full max-w-[560px]">
           <div className="rounded-xl bg-white p-4 shadow-2xl shadow-gray-500 dark:bg-gray-800 dark:text-white">
             <div className="relative">

@@ -13,7 +13,7 @@ const links = [
 ]
 
 export default function DropMenu() {
-  const [ThemeSound] = useSound('/switch_theme_sound.mp3')
+  const [ThemeSound] = useSound('/static/sounds/open_menu_sound.mp3')
   const { theme, setTheme } = useTheme()
 
   return (
@@ -49,6 +49,12 @@ export default function DropMenu() {
           leave="transition ease-in duration-75"
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
+          afterEnter={() => {
+            ThemeSound()
+          }}
+          afterLeave={() => {
+            ThemeSound()
+          }}
         >
           <Menu.Items
             className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-y-2 divide-gray-100 rounded-xl border-4 border-gray-100 bg-white

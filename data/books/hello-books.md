@@ -7,6 +7,8 @@ draft: false
 summary: 'Placeholder info about books'
 images: ['/static/images/ocean.jpg']
 authors: ['default']
+book_author: 'Shouryan Nikam'
+stars: 5
 ---
 
 # Hello!

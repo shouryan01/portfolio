@@ -4,6 +4,15 @@ import siteMetadata from '@/data/siteMetadata'
 import { useState } from 'react'
 import Pagination from '@/components/Pagination'
 import { BsFillFunnelFill as FilterIcon } from 'react-icons/bs'
+import { AiFillStar } from 'react-icons/ai'
+
+function DisplayStars(rating) {
+  const stars = []
+  for (let i = 0; i < rating; i++) {
+    stars.push(<AiFillStar className="ml-1 -mt-0.5 inline-block h-4 w-4 text-yellow-500" />)
+  }
+  return stars
+}
 
 export default function BooksLayout({ posts, title, initialDisplayPosts = [], pagination }) {
   const [searchValue, setSearchValue] = useState('')
@@ -45,12 +54,12 @@ export default function BooksLayout({ posts, title, initialDisplayPosts = [], pa
         <div className="grid grid-cols-1 gap-8 py-12 md:grid-cols-2 lg:grid-cols-3">
           {!filteredBlogPosts.length && 'No posts found.'}
           {displayPosts.map((frontMatter) => {
-            const { slug, date, title, summary, tags } = frontMatter
+            const { slug, date, title, summary, tags, stars, book_author } = frontMatter
             return (
               <Link
                 key={slug}
                 href={`/books/${slug}`}
-                className="bg-day·dark:bg-night·group group relative flex transform cursor-pointer flex-wrap border border-gray-200 bg-opacity-50 p-px py-px transition duration-200 hover:scale-105 dark:border-gray-700 dark:bg-opacity-50"
+                className="bg-day·dark:bg-night·group group relative flex transform cursor-pointer flex-wrap rounded-2xl border border-gray-200 bg-opacity-50 p-px py-px transition duration-200 hover:scale-105 hover:bg-gray-100 dark:border-gray-700 dark:bg-opacity-50 dark:hover:bg-gray-800"
               >
                 <div className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 transform bg-primary-500 duration-200 group-hover:scale-x-100" />
                 <div className="absolute bottom-0 left-0 h-full w-0.5 origin-bottom scale-y-0 transform bg-primary-500 duration-200 group-hover:scale-y-100" />
@@ -59,15 +68,21 @@ export default function BooksLayout({ posts, title, initialDisplayPosts = [], pa
                 <div className="bg-day dark:bg-night relative space-y-2 rounded-2xl p-4">
                   <article>
                     <div>
-                      <h2 className="text-2xl font-bold leading-8 tracking-tight ">
+                      <h2 className="text-3xl font-bold leading-8 tracking-tight">
                         <Link
                           href={`/books/${slug}`}
-                          className="text-gray-900 transition  duration-500 ease-in-out hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-500"
+                          className="text-gray-900 transition duration-300 hover:scale-105 hover:text-primary-500 dark:text-white dark:hover:text-primary-500 "
                         >
                           {title}
                         </Link>
                       </h2>
-                      <div className="prose prose-base max-w-none text-gray-500 sm:prose-lg dark:text-gray-400">
+                      <div className="prose prose-base max-w-none text-gray-500 sm:prose-lg dark:text-gray-300">
+                        {book_author}
+                      </div>
+
+                      {DisplayStars(stars)}
+
+                      <div className="sm:prose-md prose prose-base max-w-none text-gray-500 dark:text-gray-400">
                         {summary}
                       </div>
 
