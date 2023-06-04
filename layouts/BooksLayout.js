@@ -1,10 +1,10 @@
+import { AiFillStar } from 'react-icons/ai'
+import BookTag from '@/components/BookTag'
+import { BsFillFunnelFill as FilterIcon } from 'react-icons/bs'
 import Link from '@/components/Link'
-import Tag from '@/components/Tag'
+import Pagination from '@/components/Pagination'
 import siteMetadata from '@/data/siteMetadata'
 import { useState } from 'react'
-import Pagination from '@/components/Pagination'
-import { BsFillFunnelFill as FilterIcon } from 'react-icons/bs'
-import { AiFillStar } from 'react-icons/ai'
 
 function DisplayStars(rating) {
   const stars = []
@@ -88,7 +88,7 @@ export default function BooksLayout({ posts, title, initialDisplayPosts = [], pa
 
                       <div className="flex flex-wrap pt-2">
                         {tags.map((tag) => (
-                          <Tag key={tag} text={tag} />
+                          <BookTag key={tag} text={tag} />
                         ))}
                       </div>
                     </div>

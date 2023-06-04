@@ -1,6 +1,8 @@
+import { AiFillGithub, AiFillYoutube } from 'react-icons/ai'
+
 import Image from './Image'
 import Link from './Link'
-import { AiFillGithub, AiFillYoutube } from 'react-icons/ai'
+import Tag from '@/components/Tag'
 
 const Card = ({ title, description, imgSrc, href, github, tech1, tech2, tech3, tech4, tech5 }) => (
   <div className="md p-4 duration-300 hover:scale-105 md:w-1/2" style={{ maxWidth: '544px' }}>
@@ -37,7 +39,7 @@ const Card = ({ title, description, imgSrc, href, github, tech1, tech2, tech3, t
             </h2>
           </Link>
 
-          <div className="flex justify-end text-3xl duration-300 duration-300 hover:scale-110 hover:text-teal-500">
+          <div className="flex justify-end text-3xl duration-300 hover:scale-110 hover:text-teal-500">
             <Link href={github}>
               <AiFillGithub />
             </Link>
@@ -48,7 +50,11 @@ const Card = ({ title, description, imgSrc, href, github, tech1, tech2, tech3, t
         </Link>
         <div className="flex flex-row justify-between">
           <div className="mt-4 text-sm text-gray-400">
-            {tech1} &#8226; {tech2} &#8226; {tech3} &#8226; {tech4}
+            <Tag key={tech1} text={tech1} />
+            <Tag key={tech2} text={tech2} />
+            <Tag key={tech3} text={tech3} />
+            <Tag key={tech4} text={tech4} />
+            {/* {tech1} &#8226; {tech2} &#8226; {tech3} &#8226; {tech4} */}
           </div>
         </div>
       </div>
