@@ -1,6 +1,6 @@
-import siteMetadata from '@/data/siteMetadata'
 import { PageSEO } from '@/components/SEO'
 import { quotes } from '@/data/quotesData'
+import siteMetadata from '@/data/siteMetadata'
 
 export default function Quotes() {
   return (
@@ -12,7 +12,7 @@ export default function Quotes() {
             Quotes
           </h1>
           <p className="text-md leading-7 text-gray-500 dark:text-gray-400">
-            Here is a collection of my favorite quotes. I hope you find them as inspiring as I do.
+            Here is a collection of my favorite quotes. I hope you find them as interesting as I do.
           </p>
         </div>
         <div className="mt-6 flex flex-col gap-y-14">

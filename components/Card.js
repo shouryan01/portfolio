@@ -54,6 +54,7 @@ const Card = ({ title, description, imgSrc, href, github, tech1, tech2, tech3, t
             <Tag key={tech2} text={tech2} />
             <Tag key={tech3} text={tech3} />
             <Tag key={tech4} text={tech4} />
+
             {/* {tech1} &#8226; {tech2} &#8226; {tech3} &#8226; {tech4} */}
           </div>
         </div>

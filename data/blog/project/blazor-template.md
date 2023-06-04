@@ -2,7 +2,7 @@
 title: 'Blazor Server Starter Template'
 date: '2023-05-04'
 lastmod: '2023-05-04'
-tags: ['project', 'c#', 'html', 'javascript', 'css', 'bootstrap']
+tags: ['project', 'c#', 'html', 'javascript', 'css', 'bootstrap', 'web']
 draft: false
 authors: ['default']
 ---
@@ -25,5 +25,6 @@ It allows you to write full-stack web apps entirely in C#!
 - Role-based authorization is provdided with a GUI implementation to manage roles
 
 So what are you waiting for? Go try it out!
-
 [GitHub](https://github.com/shouryan01/BlazorServerTemplate)
+
+<img src="https://user-images.githubusercontent.com/32345320/236258134-4a1aa03a-bb08-4501-b693-37d0061b015b.png" />

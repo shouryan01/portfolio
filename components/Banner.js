@@ -1,11 +1,11 @@
+import AnimatedText from 'react-animated-text-content'
 import Link from '@/components/Link'
 import { RoughNotation } from 'react-rough-notation'
-import AnimatedText from 'react-animated-text-content'
+import ShowPrompt from './ShowPrompt'
 import TextLoop from 'react-text-loop'
 // import { useEffect, useState } from 'react'
 // import CmdPalette from '@/components/CmdPalette'
 import { useKBar } from 'kbar'
-import ShowPrompt from './ShowPrompt'
 
 function Banner() {
   // const [open, setOpen] = useState(false)
@@ -34,7 +34,7 @@ function Banner() {
             iterations={1}
             color={'#50C878'}
           >
-            CS + DS at UMich
+            Software Engineer @ Tektronix
           </RoughNotation>
           <RoughNotation
             show
@@ -44,7 +44,7 @@ function Banner() {
             iterations={1}
             color={'#50C878'}
           >
-            Incoming Software Engineer @ Tektronix
+            CS + DS from UMich
           </RoughNotation>
           <RoughNotation
             show
@@ -74,7 +74,7 @@ function Banner() {
             iterations={1}
             color={'#50C878'}
           >
-            Graduating Spring 2023
+            Graduated Spring 2023
           </RoughNotation>
         </TextLoop>{' '}
       </p>
