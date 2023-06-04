@@ -1,6 +1,6 @@
-import siteMetadata from '@/data/siteMetadata'
 import ContactLink from '@/components/ContactLink'
 import { PageSEO } from '@/components/SEO'
+import siteMetadata from '@/data/siteMetadata'
 
 const Contact = () => {
   return (

@@ -2,7 +2,7 @@
 title: 'OpenCV Hand Cricket'
 date: '2023-03-02'
 lastmod: '2023-03-02'
-tags: ['project', 'python', 'opencv', 'mediapipe']
+tags: ['project', 'python', 'opencv', 'mediapipe', 'web']
 draft: false
 authors: ['default']
 ---

@@ -1,6 +1,7 @@
 import { AiFillStar } from 'react-icons/ai'
 import BookTag from '@/components/BookTag'
 import { BsFillFunnelFill as FilterIcon } from 'react-icons/bs'
+import Image from 'next/image'
 import Link from '@/components/Link'
 import Pagination from '@/components/Pagination'
 import siteMetadata from '@/data/siteMetadata'
@@ -54,7 +55,7 @@ export default function BooksLayout({ posts, title, initialDisplayPosts = [], pa
         <div className="grid grid-cols-1 gap-8 py-12 md:grid-cols-2 lg:grid-cols-3">
           {!filteredBlogPosts.length && 'No posts found.'}
           {displayPosts.map((frontMatter) => {
-            const { slug, date, title, summary, tags, stars, book_author } = frontMatter
+            const { slug, date, title, summary, tags, stars, book_author, cover } = frontMatter
             return (
               <Link
                 key={slug}
@@ -68,6 +69,13 @@ export default function BooksLayout({ posts, title, initialDisplayPosts = [], pa
                 <div className="bg-day dark:bg-night relative space-y-2 rounded-2xl p-4">
                   <article>
                     <div>
+                      <Image
+                        alt={title}
+                        src={cover}
+                        className="object-cover object-center md:h-36 lg:h-48"
+                        width={544}
+                        height={306}
+                      />
                       <h2 className="text-3xl font-bold leading-8 tracking-tight">
                         <Link
                           href={`/books/${slug}`}
