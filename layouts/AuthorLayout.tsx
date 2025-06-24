@@ -31,9 +31,10 @@ export default function AuthorLayout({ children, content }: Props) {
                 className="h-40 w-40 rounded-full sm:h-52 sm:w-52"
               />
             )}
-            <h3 className="pt-4 pb-2 text-2xl leading-8 font-bold tracking-tight">{name}</h3>
-            <div className="text-gray-800 dark:text-gray-200">{occupation}</div>
-            <div className="text-gray-800 dark:text-gray-200">{company}</div>
+            {/* <h3 className="pt-4 pb-2 text-2xl leading-8 font-bold tracking-tight">{name}</h3> */}
+            <div className="pt-4 text-2xl leading-8 font-bold tracking-tight"></div>
+            <div className="text-lg text-gray-800 dark:text-gray-200">{occupation}</div>
+            <div className="text-gray-800 sm:pb-0 dark:text-gray-200">{company}</div>
             {/* <div className="flex space-x-3 pt-6">
               <SocialIcon kind="mail" href={`mailto:${email}`} />
               <SocialIcon kind="github" href={github} />
@@ -41,7 +42,9 @@ export default function AuthorLayout({ children, content }: Props) {
               <SocialIcon kind="x" href={twitter} />
               <SocialIcon kind="bluesky" href={bluesky} />
             </div> */}
-            <div className="prose dark:prose-invert max-w-xl pt-8 pb-8 text-center">{children}</div>
+            <div className="prose dark:prose-invert max-w-xl pt-28 pb-5 text-center sm:pt-16 sm:pb-10">
+              {children}
+            </div>
           </div>
         </div>
       </div>

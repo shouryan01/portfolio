@@ -3,7 +3,7 @@ import siteMetadata from '@/data/siteMetadata'
 
 export default function Footer() {
   return (
-    <footer className="sm:mt-16">
+    <footer>
       <div className="flex flex-col items-center">
         <div className="mb-3 flex space-x-4">
           <SocialIcon kind="mail" href={`mailto:${siteMetadata.email}`} size={8} />

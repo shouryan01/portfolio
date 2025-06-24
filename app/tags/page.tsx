@@ -15,7 +15,7 @@ export default async function Page() {
       <div className="mb-8">
         <Link
           href="/blog"
-          className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+          className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-gray-100"
         >
           ← Back to Blog
         </Link>

@@ -147,7 +147,10 @@ export default function ListLayout({
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
             return (
-              <li key={path} className="py-4">
+              <li
+                key={path}
+                className="rounded-xl py-4 pl-4 hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
                 <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                   <dl>
                     <dt className="sr-only">Published on</dt>
