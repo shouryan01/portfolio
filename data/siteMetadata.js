@@ -5,7 +5,7 @@ const siteMetadata = {
   headerTitle: 'Shouryan Nikam',
   description: 'Shouryan Nikam Website',
   language: 'en-us',
-  theme: 'system', // system, dark or light
+  theme: 'dark', // system, dark or light
   siteUrl: 'https://www.shouryan.com/',
   siteRepo: 'https://github.com/shouryan01/portfolio',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
@@ -18,7 +18,7 @@ const siteMetadata = {
   // youtube: 'https://youtube.com/shouryannikam',
   linkedin: 'https://www.linkedin.com/in/shouryannikam',
   // threads: 'https://www.threads.net/shouryannikam',
-  // instagram: 'https://www.instagram.com',
+  instagram: 'https://www.instagram.com/shouryannikam',
   // medium: 'https://medium.com/@shouryannikam',
   // bluesky: 'https://bsky.app/profile/shouryannikam.com',
   locale: 'en-US',

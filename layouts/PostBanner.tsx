@@ -1,7 +1,6 @@
 import Image from '@/components/Image'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
-import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
 import type { Blog } from 'contentlayer/generated'
@@ -31,7 +30,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
 
   return (
     <SectionContainer>
-      <ScrollTopAndComment />
+      {/* <ScrollTopAndComment /> */}
       <article>
         <div>
           <div className="space-y-1 pb-10 text-center dark:border-gray-700">
@@ -65,7 +64,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
                 <div className="pt-4 xl:pt-8">
                   <Link
                     href={`/${prev.path}`}
-                    className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                    className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 hover:underline hover:underline-offset-4"
                     aria-label={`Previous post: ${prev.title}`}
                   >
                     &larr; {prev.title}
@@ -76,7 +75,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
                 <div className="pt-4 xl:pt-8">
                   <Link
                     href={`/${next.path}`}
-                    className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                    className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 hover:underline hover:underline-offset-4"
                     aria-label={`Next post: ${next.title}`}
                   >
                     {next.title} &rarr;
