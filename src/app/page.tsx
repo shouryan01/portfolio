@@ -1,21 +1,30 @@
+import { HeroKineticCanvas } from "@/components/hero-kinetic-canvas";
+import { PresentationModeStatus } from "@/components/presentation-mode-status";
+
 export default function HomePage() {
   return (
     <div className="space-y-16">
-      {/* Editorial Hero */}
-      <section className="space-y-6 max-w-2xl">
-        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-border bg-surface-muted text-xs font-mono text-text-secondary">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>System Initialized • S-129</span>
+      {/* Editorial Hero with Kinetic WebGL Canvas Backdrop */}
+      <section className="relative -mx-6 sm:-mx-8 px-6 sm:px-8 py-8 sm:py-12 rounded-2xl overflow-hidden transition-colors">
+        <HeroKineticCanvas />
+
+        <div className="relative space-y-6 max-w-2xl">
+          <PresentationModeStatus />
+
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl tracking-tight text-text-primary leading-[1.12]">
+            Engineering craft with an <em className="italic font-normal">editorial</em> lens.
+          </h1>
+
+          <p className="text-base sm:text-lg text-text-secondary leading-relaxed font-sans">
+            Building thoughtful software and digital interfaces. This foundation pairs high-speed
+            modern tooling with timeless typography and quiet contrast principles.
+          </p>
+
+          <div className="text-xs font-mono text-text-tertiary pt-2">
+            Tip: Peel the folded corner in the bottom-right to switch between Minimal and Kinetic
+            modes.
+          </div>
         </div>
-
-        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl tracking-tight text-text-primary leading-[1.12]">
-          Engineering craft with an <em className="italic font-normal">editorial</em> lens.
-        </h1>
-
-        <p className="text-base sm:text-lg text-text-secondary leading-relaxed font-sans">
-          Building thoughtful software and digital interfaces. This foundation pairs high-speed
-          modern tooling with timeless typography and quiet contrast principles.
-        </p>
       </section>
 
       {/* Design System Foundations Section */}
@@ -31,7 +40,7 @@ export default function HomePage() {
 
         {/* Color Palette Tokens Preview */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3.5 rounded-lg border border-border bg-surface-elevated space-y-2">
+          <div className="kinetic-card p-3.5 rounded-lg border border-border bg-surface-elevated space-y-2 transition-all">
             <div className="h-6 w-full rounded border border-border bg-background" />
             <div className="space-y-0.5">
               <p className="font-mono text-xs text-text-primary font-medium">Background</p>
@@ -39,7 +48,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-lg border border-border bg-surface-elevated space-y-2">
+          <div className="kinetic-card p-3.5 rounded-lg border border-border bg-surface-elevated space-y-2 transition-all">
             <div className="h-6 w-full rounded border border-border bg-surface-muted" />
             <div className="space-y-0.5">
               <p className="font-mono text-xs text-text-primary font-medium">Surface Muted</p>
@@ -47,7 +56,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-lg border border-border bg-surface-elevated space-y-2">
+          <div className="kinetic-card p-3.5 rounded-lg border border-border bg-surface-elevated space-y-2 transition-all">
             <div className="h-6 w-full rounded border border-border bg-surface-subtle" />
             <div className="space-y-0.5">
               <p className="font-mono text-xs text-text-primary font-medium">Surface Subtle</p>
@@ -55,7 +64,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-lg border border-border bg-surface-elevated space-y-2">
+          <div className="kinetic-card p-3.5 rounded-lg border border-border bg-surface-elevated space-y-2 transition-all">
             <div className="h-6 w-full rounded bg-accent" />
             <div className="space-y-0.5">
               <p className="font-mono text-xs text-text-primary font-medium">Accent</p>
@@ -65,7 +74,7 @@ export default function HomePage() {
         </div>
 
         {/* Typography Hierarchy Showcase */}
-        <div className="p-6 rounded-lg border border-border bg-surface-elevated space-y-5">
+        <div className="kinetic-card p-6 rounded-lg border border-border bg-surface-elevated space-y-5 transition-all">
           <div className="space-y-1">
             <span className="font-mono text-[11px] uppercase tracking-wider text-text-tertiary">
               Typography Token: Editorial Serif (Newsreader)
@@ -101,23 +110,23 @@ export default function HomePage() {
       <section className="space-y-4 pt-4 border-t border-border">
         <h2 className="font-serif text-xl tracking-tight text-text-primary">Core Foundation</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-lg border border-border bg-surface-elevated">
+          <div className="kinetic-card p-4 rounded-lg border border-border bg-surface-elevated transition-all">
             <div className="font-mono text-xs text-text-tertiary mb-1">Framework</div>
             <div className="font-sans font-medium text-text-primary">Next.js 16 + React 19</div>
             <div className="text-xs text-text-secondary mt-1">App Router with Turbopack</div>
           </div>
 
-          <div className="p-4 rounded-lg border border-border bg-surface-elevated">
+          <div className="kinetic-card p-4 rounded-lg border border-border bg-surface-elevated transition-all">
             <div className="font-mono text-xs text-text-tertiary mb-1">Styling Engine</div>
             <div className="font-sans font-medium text-text-primary">Tailwind CSS v4</div>
             <div className="text-xs text-text-secondary mt-1">CSS variables & theme tokens</div>
           </div>
 
-          <div className="p-4 rounded-lg border border-border bg-surface-elevated">
-            <div className="font-mono text-xs text-text-tertiary mb-1">Developer Toolchain</div>
-            <div className="font-sans font-medium text-text-primary">Oxlint & Oxfmt</div>
+          <div className="kinetic-card p-4 rounded-lg border border-border bg-surface-elevated transition-all">
+            <div className="font-mono text-xs text-text-tertiary mb-1">Presentation Modes</div>
+            <div className="font-sans font-medium text-text-primary">Minimal & Kinetic</div>
             <div className="text-xs text-text-secondary mt-1">
-              Rust-powered linting & formatting
+              Tactile corner peel & WebGL shader
             </div>
           </div>
         </div>

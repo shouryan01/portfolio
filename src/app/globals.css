@@ -61,7 +61,41 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease;
   }
+}
+
+/* Native View Transitions API for presentation mode flips */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 250ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0ms !important;
+  }
+}
+
+/* Kinetic Presentation Mode Styles */
+[data-presentation-mode="kinetic"] .kinetic-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: color-mix(in srgb, var(--surface-elevated) 78%, transparent);
+  border-color: color-mix(in srgb, var(--border) 75%, transparent);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+}
+
+.dark[data-presentation-mode="kinetic"] .kinetic-card {
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.35);
+}
+
+[data-presentation-mode="kinetic"] .kinetic-card:hover {
+  border-color: var(--border-hover);
 }
 
 @theme {
