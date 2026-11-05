@@ -76,9 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
               </header>
 
-              <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-12 md:py-16">
-                {children}
-              </main>
+              <main className="site-main flex-1">{children}</main>
 
               <footer className="w-full border-t border-border/70 py-8 text-xs text-text-tertiary">
                 <div className="max-w-4xl mx-auto px-6 flex items-center justify-center sm:justify-end">
