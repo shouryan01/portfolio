@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
 
 const emptySubscribe = () => () => {};
 
@@ -21,10 +20,11 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <div
-        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface-muted/50"
+        className="inline-flex items-center rounded-full border border-border bg-surface-muted p-0.5 text-[11px] font-mono text-text-tertiary"
         aria-hidden="true"
       >
-        <div className="h-4 w-4" />
+        <span className="px-2.5 py-0.5 rounded-full">Light</span>
+        <span className="px-2.5 py-0.5 rounded-full">Dark</span>
       </div>
     );
   }
@@ -32,18 +32,37 @@ export function ThemeToggle() {
   const isDark = resolvedTheme === "dark";
 
   return (
-    <button
-      type="button"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface-elevated text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer"
-      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+    <div
+      aria-label="Color scheme selector"
+      className="inline-flex items-center rounded-full border border-border bg-surface-muted p-0.5 text-[11px] font-mono text-text-secondary select-none"
     >
-      {isDark ? (
-        <Sun className="h-4 w-4" strokeWidth={1.8} />
-      ) : (
-        <Moon className="h-4 w-4" strokeWidth={1.8} />
-      )}
-    </button>
+      <button
+        type="button"
+        aria-pressed={!isDark}
+        aria-label="Switch to light theme"
+        onClick={() => setTheme("light")}
+        className={`px-2.5 py-0.5 rounded-full transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus-ring ${
+          !isDark
+            ? "bg-surface-elevated text-text-primary shadow-xs font-medium"
+            : "text-text-tertiary hover:text-text-primary"
+        }`}
+      >
+        Light
+      </button>
+
+      <button
+        type="button"
+        aria-pressed={isDark}
+        aria-label="Switch to dark theme"
+        onClick={() => setTheme("dark")}
+        className={`px-2.5 py-0.5 rounded-full transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus-ring ${
+          isDark
+            ? "bg-surface-elevated text-text-primary shadow-xs font-medium"
+            : "text-text-tertiary hover:text-text-primary"
+        }`}
+      >
+        Dark
+      </button>
+    </div>
   );
 }

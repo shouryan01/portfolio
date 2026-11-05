@@ -86,11 +86,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <div className="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <p className="font-sans">© {CURRENT_YEAR} Shouryan Nikam. All rights reserved.</p>
                   <div className="flex items-center gap-4 font-mono text-[11px]">
-                    <span>Next.js 16</span>
+                    <a
+                      href="https://github.com/shouryan01"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-text-primary transition-colors"
+                    >
+                      GitHub
+                    </a>
                     <span className="text-border">•</span>
-                    <span>React 19</span>
+                    <a
+                      href="https://www.linkedin.com/in/shouryannikam"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-text-primary transition-colors"
+                    >
+                      LinkedIn
+                    </a>
                     <span className="text-border">•</span>
-                    <span>Tailwind CSS v4</span>
+                    <a
+                      href="mailto:snnikam@umich.edu"
+                      className="hover:text-text-primary transition-colors"
+                    >
+                      Email
+                    </a>
                   </div>
                 </div>
               </footer>
