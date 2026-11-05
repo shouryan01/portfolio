@@ -7,8 +7,6 @@ import { PresentationModeProvider } from "@/context/presentation-mode-context";
 import { PeelSwitcher } from "@/components/peel-switcher";
 import "./globals.css";
 
-const CURRENT_YEAR = new Date().getFullYear();
-
 const newsreader = Newsreader({
   subsets: ["latin"],
   style: ["normal", "italic"],
@@ -83,8 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </main>
 
               <footer className="w-full border-t border-border/70 py-8 text-xs text-text-tertiary">
-                <div className="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <p className="font-sans">© {CURRENT_YEAR} Shouryan Nikam. All rights reserved.</p>
+                <div className="max-w-4xl mx-auto px-6 flex items-center justify-center sm:justify-end">
                   <div className="flex items-center gap-4 font-mono text-[11px]">
                     <a
                       href="https://github.com/shouryan01"
