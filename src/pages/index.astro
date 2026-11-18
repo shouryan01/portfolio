@@ -1,0 +1,84 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PhotoPlaceholder from "../components/PhotoPlaceholder.astro";
+import { siteConfig } from "../site.config";
+import { formatMonthYear, getYear } from "../utils/date";
+
+const projects = (await getCollection("projects"))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, siteConfig.home.projectsLimit);
+
+const recentArticles = (await getCollection("writing"))
+  .filter((a) => !a.data.draft && getYear(a.data.date) === siteConfig.writing.currentYear)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, siteConfig.home.writingLimit);
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: siteConfig.name,
+  url: Astro.site?.toString(),
+  sameAs: [siteConfig.links.github, siteConfig.links.linkedin, siteConfig.links.photos]
+};
+---
+
+<BaseLayout title={siteConfig.name} jsonLd={personJsonLd}>
+  <section class="hero">
+    <div>
+      <h1 class="hero-title reveal" style="--d:0">
+        {siteConfig.tagline}
+      </h1>
+      <p class="hero-subtitle reveal" style="--d:1">
+        Placeholder bio — building fast, calm interfaces and AI-native tools.
+        Explore open-source work on
+        <a href={siteConfig.links.github} target="_blank" rel="noreferrer" class="inline-link">GitHub</a>
+        or photos on
+        <a href={siteConfig.links.photos} target="_blank" rel="noreferrer" class="inline-link">photos.shouryannikam.com</a>.
+      </p>
+    </div>
+
+    <a href="/about" class="reveal" style="--d:1" title="About me">
+      <PhotoPlaceholder />
+    </a>
+  </section>
+
+  <section class="section reveal" style="--d:2;">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="section-badge">W</span>
+        <span style="view-transition-name: writing-heading; display: inline-block;">Writing</span>
+      </h2>
+      <a href="/writing" class="section-action">All writing →</a>
+    </div>
+    <div class="list-group">
+      {recentArticles.map((a) => (
+        <a href={`/writing/${a.id}`} class="list-row">
+          <div class="row-main">
+            <span class="row-title">{a.data.title}</span>
+          </div>
+          <span class="row-meta">{formatMonthYear(a.data.date)}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section reveal" style="--d:3;">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="section-badge">P</span>
+        <span style="view-transition-name: projects-heading; display: inline-block;">Projects</span>
+      </h2>
+      <a href="/projects" class="section-action">All projects →</a>
+    </div>
+    <div class="list-group">
+      {projects.map((p) => (
+        <a href={`/projects/${p.id}`} class="list-row">
+          <div class="row-main">
+            <span class="row-title">{p.data.title}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

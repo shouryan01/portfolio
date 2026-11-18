@@ -1,0 +1,154 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="404 — Shouryan Nikam" description="Page not found." hideFooter>
+  <section class="not-found">
+    <div id="nf-stage" class="nf-stage reveal" style="--d:0" title="Move cursor or click">
+      <svg class="nf-svg" viewBox="0 0 180 64" aria-hidden="true">
+        <!-- 4 -->
+        <path class="nf-stroke" d="M24 44 L24 14 L10 34 L30 34" />
+        <!-- 0 (interactive eye/face) -->
+        <rect class="nf-stroke" x="56" y="12" width="68" height="40" rx="20" />
+        <g id="nf-eyes">
+          <circle id="nf-eye-l" class="nf-pupil" cx="78" cy="32" r="3" />
+          <circle id="nf-eye-r" class="nf-pupil" cx="102" cy="32" r="3" />
+        </g>
+        <!-- 4 -->
+        <path class="nf-stroke" d="M158 44 L158 14 L144 34 L164 34" />
+      </svg>
+      <span id="nf-hint" class="nf-hint">nothing at this url</span>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding: 24px 0 32px;
+  }
+
+  .nf-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 36px 24px 28px;
+    margin-bottom: 32px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--bg-subtle);
+    cursor: crosshair;
+    user-select: none;
+    transition: border-color 180ms ease, transform 280ms var(--ease-spring);
+  }
+
+  .nf-stage:hover {
+    border-color: var(--border-strong);
+  }
+
+  .nf-stage:active {
+    transform: scale(0.985);
+  }
+
+  .nf-svg {
+    width: 180px;
+    height: 64px;
+    overflow: visible;
+  }
+
+  .nf-stroke {
+    stroke: var(--fg);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
+  .nf-pupil {
+    fill: var(--fg);
+  }
+
+  .nf-hint {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--fg-muted);
+    transition: opacity 150ms ease;
+  }
+
+  .nf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.875rem;
+  }
+
+  .nf-sep {
+    color: var(--fg-muted);
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const stage = document.getElementById("nf-stage");
+    if (!stage || stage.dataset.bound) return;
+    stage.dataset.bound = "1";
+
+    const eyeL = document.getElementById("nf-eye-l");
+    const eyeR = document.getElementById("nf-eye-r");
+    const hint = document.getElementById("nf-hint");
+    const hints = [
+      "nothing at this url",
+      "still looking...",
+      "Hit h on keyboard",
+      "404 · lost in transit"
+    ];
+    let hintIdx = 0;
+
+    let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+
+    function tick() {
+      cx += (tx - cx) * 0.16;
+      cy += (ty - cy) * 0.16;
+      if (eyeL && eyeR) {
+        eyeL.setAttribute("cx", (78 + cx * 7).toFixed(2));
+        eyeL.setAttribute("cy", (32 + cy * 5).toFixed(2));
+        eyeR.setAttribute("cx", (102 + cx * 7).toFixed(2));
+        eyeR.setAttribute("cy", (32 + cy * 5).toFixed(2));
+      }
+      if (Math.abs(tx - cx) > 0.005 || Math.abs(ty - cy) > 0.005) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        raf = 0;
+      }
+    }
+
+    function kick() {
+      if (!raf) raf = requestAnimationFrame(tick);
+    }
+
+    window.addEventListener("pointermove", (e) => {
+      if (!document.body.contains(stage)) return;
+      const r = stage.getBoundingClientRect();
+      const nx = (e.clientX - (r.left + r.width / 2)) / (window.innerWidth * 0.4);
+      const ny = (e.clientY - (r.top + r.height / 2)) / (window.innerHeight * 0.4);
+      tx = Math.max(-1, Math.min(1, nx));
+      ty = Math.max(-1, Math.min(1, ny));
+      kick();
+    });
+
+    stage.addEventListener("click", () => {
+      hintIdx = (hintIdx + 1) % hints.length;
+      if (hint) hint.textContent = hints[hintIdx];
+      stage.animate(
+        [
+          { transform: "scale(1)" },
+          { transform: "scale(0.96)" },
+          { transform: "scale(1)" }
+        ],
+        { duration: 300, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" }
+      );
+    });
+  });
+</script>

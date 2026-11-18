@@ -1,0 +1,27 @@
+---
+interface Props {
+  large?: boolean;
+}
+
+const { large = false } = Astro.props;
+const cls = large
+  ? "photo-placeholder photo-placeholder--large vt-portrait-shared"
+  : "photo-placeholder vt-portrait-shared";
+---
+
+<div class={cls} aria-label="Portrait photo placeholder">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <rect x="3" y="3" width="18" height="18" rx="3" />
+    <circle cx="9" cy="9" r="1.8" />
+    <path d="m21 15-4.5-4.5a2 2 0 0 0-2.8 0L6 18" />
+  </svg>
+  <span>photo</span>
+</div>

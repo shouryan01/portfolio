@@ -1,0 +1,59 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { siteConfig } from "../../site.config";
+import { formatFullDate } from "../../utils/date";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("writing");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const blogPostingJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.excerpt,
+  datePublished: post.data.date.toISOString(),
+  author: {
+    "@type": "Person",
+    name: siteConfig.name,
+    url: Astro.site?.toString()
+  }
+};
+---
+
+<BaseLayout
+  title={`${post.data.title} — ${siteConfig.name}`}
+  description={post.data.excerpt}
+  ogType="article"
+  publishedTime={post.data.date.toISOString()}
+  jsonLd={blogPostingJsonLd}
+>
+  <a href="/writing" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="9 10 4 15 9 20" />
+      <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+    </svg>
+    Writing
+  </a>
+
+  <article>
+    <header class="article-header">
+      <h1 class="article-title" style="view-transition-name: vt-article-title">{post.data.title}</h1>
+      <div class="article-meta" style="view-transition-name: vt-article-meta">
+        <time datetime={post.data.date.toISOString()}>{formatFullDate(post.data.date)}</time>
+      </div>
+    </header>
+
+    <div class="prose reveal" style="--d:1">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PhotoPlaceholder from "../components/PhotoPlaceholder.astro";
+import { siteConfig } from "../site.config";
+---
+
+<BaseLayout title={`About — ${siteConfig.name}`}>
+  <section class="about-hero">
+    <div class="reveal" style="--d:0">
+      <PhotoPlaceholder large />
+    </div>
+    <div>
+      <h1 class="hero-title reveal" style="--d:1">About</h1>
+      <p class="hero-subtitle reveal" style="--d:2">
+        {siteConfig.about.bio}
+      </p>
+    </div>
+  </section>
+
+  <section class="section prose reveal" style="--d:3">
+    <h2>Now</h2>
+    <p>{siteConfig.about.now}</p>
+
+    <h2>Photography</h2>
+    <p>
+      {siteConfig.about.photographyNote}
+      <a href={siteConfig.links.photos} target="_blank" rel="noreferrer" class="inline-link">photos.shouryannikam.com</a>.
+    </p>
+  </section>
+</BaseLayout>
