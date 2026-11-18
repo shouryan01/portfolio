@@ -1248,4 +1248,93 @@ details.archive-details[open] .archive-chevron {
     animation: none;
     stroke-dashoffset: 0;
   }
+  .fx-layer {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   Home Interactive Background Effects (C to cycle: streak -> gradient -> off)
+   ========================================================================== */
+
+.fx-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 420ms var(--ease-out-expo);
+}
+
+html[data-home="true"][data-fx="streak"] #fx-streak {
+  opacity: 1;
+}
+
+html[data-home="true"][data-fx="gradient"] #fx-gradient {
+  opacity: 1;
+}
+
+#fx-gradient {
+  overflow: hidden;
+}
+
+#fx-gradient::before,
+#fx-gradient::after {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+#fx-gradient::before {
+  background:
+    radial-gradient(45% 40% at 28% 30%, rgba(245, 158, 11, 0.14), transparent 70%),
+    radial-gradient(40% 45% at 72% 28%, rgba(56, 189, 248, 0.14), transparent 70%),
+    radial-gradient(45% 45% at 55% 75%, rgba(168, 85, 247, 0.12), transparent 70%);
+  animation: fxDriftA 22s ease-in-out infinite alternate;
+}
+
+#fx-gradient::after {
+  background:
+    radial-gradient(38% 38% at 68% 65%, rgba(244, 63, 94, 0.10), transparent 70%),
+    radial-gradient(42% 36% at 22% 72%, rgba(20, 184, 166, 0.11), transparent 70%);
+  animation: fxDriftB 28s ease-in-out infinite alternate;
+}
+
+[data-theme="dark"] #fx-gradient::before {
+  background:
+    radial-gradient(45% 40% at 28% 30%, rgba(251, 191, 36, 0.11), transparent 70%),
+    radial-gradient(40% 45% at 72% 28%, rgba(56, 189, 248, 0.12), transparent 70%),
+    radial-gradient(45% 45% at 55% 75%, rgba(192, 132, 252, 0.11), transparent 70%);
+}
+
+[data-theme="dark"] #fx-gradient::after {
+  background:
+    radial-gradient(38% 38% at 68% 65%, rgba(251, 113, 133, 0.09), transparent 70%),
+    radial-gradient(42% 36% at 22% 72%, rgba(45, 212, 191, 0.10), transparent 70%);
+}
+
+@keyframes fxDriftA {
+  0% {
+    transform: translate3d(-4%, -3%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(5%, 3%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-2%, 5%, 0) scale(0.98);
+  }
+}
+
+@keyframes fxDriftB {
+  0% {
+    transform: translate3d(4%, 3%, 0) scale(1.02);
+  }
+  50% {
+    transform: translate3d(-5%, -2%, 0) scale(0.97);
+  }
+  100% {
+    transform: translate3d(2%, -5%, 0) scale(1.05);
+  }
 }

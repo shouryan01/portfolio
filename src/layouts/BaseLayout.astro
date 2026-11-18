@@ -65,7 +65,7 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     )}
     <script is:inline>
       (function () {
-        function applyState(doc, isSwap) {
+        function applyState(doc, isSwap, targetPath) {
           try {
             var saved = localStorage.getItem("theme");
             var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -73,20 +73,27 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
               "data-theme",
               saved || (prefersDark ? "dark" : "light")
             );
+            var path = targetPath || window.location.pathname;
+            doc.documentElement.setAttribute("data-home", path === "/" ? "true" : "false");
+            doc.documentElement.setAttribute("data-fx", localStorage.getItem("fx_mode") || "streak");
             var seenHome = sessionStorage.getItem("home_seen") === "1";
-            if (isSwap || seenHome || window.location.pathname !== "/") {
+            if (isSwap || seenHome || path !== "/") {
               doc.documentElement.setAttribute("data-fast-reveal", "true");
             } else {
               doc.documentElement.removeAttribute("data-fast-reveal");
             }
-            if (window.location.pathname === "/") {
+            if (path === "/") {
               sessionStorage.setItem("home_seen", "1");
             }
           } catch (e) {}
         }
-        applyState(document, false);
+        applyState(document, false, window.location.pathname);
         document.addEventListener("astro:before-swap", function (ev) {
-          applyState(ev.newDocument, true);
+          var nextPath = window.location.pathname;
+          try {
+            nextPath = new URL(ev.to).pathname;
+          } catch (e) {}
+          applyState(ev.newDocument, true, nextPath);
           try {
             var fromPath = window.location.pathname;
             var toPath = new URL(ev.to).pathname;
@@ -111,6 +118,8 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     </script>
   </head>
   <body>
+    <div id="fx-gradient" class="fx-layer" aria-hidden="true" transition:persist></div>
+    <canvas id="fx-streak" class="fx-layer" aria-hidden="true" transition:persist></canvas>
     <div id="scroll-progress" class="scroll-progress" hidden aria-hidden="true"></div>
     <div id="scroll-blur-top" class="scroll-blur-top" hidden aria-hidden="true">
       <span class="blur-layer"></span>
@@ -160,6 +169,15 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
                 aria-label="Toggle light and dark theme"
               ></button>
               <span class="tooltip" role="tooltip">Theme <kbd>T</kbd></span>
+            </span>
+
+            <span class="tooltip-wrap tooltip-wrap--top" id="fx-wrap" hidden>
+              <button
+                id="fx-btn"
+                class="icon-btn"
+                aria-label="Cycle home background effect"
+              ></button>
+              <span class="tooltip" role="tooltip" id="fx-tooltip">Effect <kbd>C</kbd></span>
             </span>
           </div>
         </footer>
@@ -358,6 +376,12 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
           themeBtn.addEventListener("click", toggleTheme);
         }
 
+        const fxBtn = document.getElementById("fx-btn");
+        if (fxBtn && !fxBtn.dataset.bound) {
+          fxBtn.dataset.bound = "1";
+          fxBtn.addEventListener("click", cycleFxMode);
+        }
+
         const copyBtn = document.getElementById("copy-email");
         if (copyBtn && !copyBtn.dataset.bound) {
           copyBtn.dataset.bound = "1";
@@ -372,6 +396,144 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
             setTimeout(() => swapEmailLabel(copyBtn, "Email"), 1600);
           });
         }
+      }
+
+      const FX_MODES = ["streak", "gradient", "off"] as const;
+      type FxMode = (typeof FX_MODES)[number];
+      const FX_LABELS: Record<FxMode, string> = {
+        streak: "Streak",
+        gradient: "Gradient",
+        off: "Off"
+      };
+
+      function getFxMode(): FxMode {
+        const val = document.documentElement.getAttribute("data-fx") as FxMode | null;
+        return val && FX_MODES.includes(val) ? val : "streak";
+      }
+
+      function renderFxButton() {
+        const wrap = document.getElementById("fx-wrap");
+        const btn = document.getElementById("fx-btn");
+        const tip = document.getElementById("fx-tooltip");
+        const isHome = window.location.pathname === "/";
+        if (wrap) wrap.hidden = !isHome;
+        if (!btn || !isHome) return;
+
+        const mode = getFxMode();
+        if (tip) tip.innerHTML = `${FX_LABELS[mode]} <kbd>C</kbd>`;
+        if (mode === "streak") {
+          btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17c4-8 8 2 16-10"/><circle cx="20" cy="7" r="1.5" fill="currentColor"/></svg>`;
+        } else if (mode === "gradient") {
+          btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 0 1 8 0"/></svg>`;
+        } else {
+          btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="5" y1="5" x2="19" y2="19"/></svg>`;
+        }
+      }
+
+      function cycleFxMode() {
+        if (window.location.pathname !== "/") return;
+        const current = getFxMode();
+        const next = FX_MODES[(FX_MODES.indexOf(current) + 1) % FX_MODES.length];
+        document.documentElement.setAttribute("data-fx", next);
+        try {
+          localStorage.setItem("fx_mode", next);
+        } catch {}
+        renderFxButton();
+        if (next !== "streak") {
+          const canvas = document.getElementById("fx-streak") as HTMLCanvasElement | null;
+          const ctx = canvas?.getContext("2d");
+          if (canvas && ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      function initFxStreak() {
+        const w = window as any;
+        if (w.__fxStreakInit) return;
+        w.__fxStreakInit = true;
+
+        if (
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+          !window.matchMedia("(pointer: fine)").matches
+        ) {
+          return;
+        }
+
+        const canvas = document.getElementById("fx-streak") as HTMLCanvasElement | null;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+        let rafId = 0;
+        const points: Array<{ x: number; y: number; t: number }> = [];
+        const MAX_AGE = 360;
+
+        function resize() {
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          width = window.innerWidth;
+          height = window.innerHeight;
+          canvas!.width = Math.floor(width * dpr);
+          canvas!.height = Math.floor(height * dpr);
+          ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resize();
+        window.addEventListener("resize", resize, { passive: true });
+
+        function draw(now: number) {
+          rafId = 0;
+          ctx!.clearRect(0, 0, width, height);
+
+          if (window.location.pathname !== "/" || getFxMode() !== "streak") {
+            points.length = 0;
+            return;
+          }
+
+          while (points.length && now - points[0].t > MAX_AGE) {
+            points.shift();
+          }
+
+          if (points.length > 1) {
+            const isDark = getTheme() === "dark";
+            const baseHue = (now * 0.04) % 360;
+            ctx!.lineCap = "round";
+            ctx!.lineJoin = "round";
+
+            for (let i = 1; i < points.length; i++) {
+              const p0 = points[i - 1];
+              const p1 = points[i];
+              const life = 1 - (now - p1.t) / MAX_AGE;
+              if (life <= 0) continue;
+
+              const progress = i / points.length;
+              const hue = (baseHue + i * 5) % 360;
+              const alpha = life * progress * (isDark ? 0.34 : 0.24);
+              ctx!.strokeStyle = `hsla(${hue}, 88%, ${isDark ? 64 : 54}%, ${alpha.toFixed(3)})`;
+              ctx!.lineWidth = 1.5 + progress * 5.5;
+              ctx!.beginPath();
+              ctx!.moveTo(p0.x, p0.y);
+              ctx!.lineTo(p1.x, p1.y);
+              ctx!.stroke();
+            }
+
+            rafId = requestAnimationFrame(draw);
+          }
+        }
+
+        window.addEventListener(
+          "pointermove",
+          (e) => {
+            if (window.location.pathname !== "/" || getFxMode() !== "streak") return;
+            const now = performance.now();
+            const last = points[points.length - 1];
+            if (last && Math.hypot(e.clientX - last.x, e.clientY - last.y) < 3) return;
+            points.push({ x: e.clientX, y: e.clientY, t: now });
+            if (points.length > 28) points.shift();
+            if (!rafId) rafId = requestAnimationFrame(draw);
+          },
+          { passive: true }
+        );
       }
 
       // One-time global listeners
@@ -389,6 +551,7 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
           if (key === "w" && window.location.pathname !== "/writing") navigate("/writing");
           if (key === "a" && window.location.pathname !== "/about") navigate("/about");
           if (key === "t") toggleTheme();
+          if (key === "c") cycleFxMode();
         });
 
         document.addEventListener("click", (e) => {
@@ -412,11 +575,17 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 
       document.addEventListener("astro:page-load", () => {
         renderThemeIcon();
+        renderFxButton();
         initNavMagnet();
         setActiveNav();
         bindGlobalControls();
         initCodeCopyButtons();
         requestAnimationFrame(syncScrollEffects);
+        if ("requestIdleCallback" in window) {
+          (window as any).requestIdleCallback(initFxStreak);
+        } else {
+          setTimeout(initFxStreak, 1);
+        }
       });
     </script>
   </body>
