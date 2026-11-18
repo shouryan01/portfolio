@@ -25,6 +25,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 
 const emailUserB64 = Buffer.from(siteConfig.email.user).toString("base64");
 const emailDomainB64 = Buffer.from(siteConfig.email.domain).toString("base64");
+const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 ---
 
 <!doctype html>
@@ -55,6 +56,13 @@ const emailDomainB64 = Buffer.from(siteConfig.email.domain).toString("base64");
       rel="stylesheet"
     />
     <ClientRouter />
+    {cfAnalyticsToken && (
+      <script
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: cfAnalyticsToken })}
+      />
+    )}
     <script is:inline>
       (function () {
         function applyState(doc, isSwap) {
