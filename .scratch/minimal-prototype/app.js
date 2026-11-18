@@ -4,42 +4,59 @@
 
 const CURRENT_YEAR = 2026;
 
+const RETURN_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg>`;
+
 const PROJECTS = [
   {
-    id: "portfolio-studio",
+    slug: "portfolio-studio",
     title: "Git-Backed Content Studio",
     year: "2026",
+    role: "Design & Engineering",
     desc: "In-browser markdown editor with instant ISR revalidation and R2 media uploads.",
-    detail:
-      "Built to replace third-party CMS lock-in. Edits commit directly to GitHub via API in production and local disk in dev, paired with Shiki server-side highlighting and a Web-MCP endpoint.",
-    tags: ["Next.js 16", "Tailwind v4", "Shiki", "Web-MCP"]
+    repoUrl: "https://github.com",
+    body: [
+      "Built to replace third-party CMS lock-in. Edits commit directly to GitHub via API in production and local disk in development, paired with Shiki server-side highlighting and a Web-MCP endpoint.",
+      "<h2>Architecture</h2>",
+      "Every article and project lives as a plain <code>.md</code> file with Zod-validated YAML frontmatter. Saving from the browser triggers Next.js <code>revalidateTag</code> for instant updates without full rebuilds."
+    ]
   },
   {
-    id: "kiku-audio",
+    slug: "kiku-audio",
     title: "Kiku",
     year: "2026",
+    role: "Creator",
     desc: "Low-latency local transcription and voice-note workspace.",
-    detail:
+    tags: ["TypeScript", "AudioWorklet", "Local AI"],
+    repoUrl: "https://github.com",
+    body: [
       "Focused on keyboard-first navigation, crisp waveform scrubbing, and zero-jank streaming text reveal.",
-    tags: ["TypeScript", "AudioWorklet", "Local AI"]
+      "Placeholder project writeup — designed to run audio capture and transcription locally with minimal memory overhead."
+    ]
   },
   {
-    id: "photo-journal",
+    slug: "photo-journal",
     title: "Photography Archive",
     year: "2025",
+    role: "Photography & Web",
     desc: "Minimal photo essays and 35mm / digital galleries at photos.shouryannikam.com.",
-    detail:
+    tags: ["Photography", "R2", "Edge"],
+    liveUrl: "https://photos.shouryannikam.com/",
+    body: [
       "Fast, distraction-free gallery with EXIF metadata, responsive image grids, and zero-egress edge caching.",
-    tags: ["Photography", "R2", "Edge"]
+      "Placeholder project writeup — keeping photography on its own dedicated subdomain gives images room to breathe."
+    ]
   },
   {
-    id: "instrument-checkout",
+    slug: "instrument-checkout",
     title: "Instrument Checkout",
     year: "2025",
+    role: "Full-Stack",
     desc: "Fast lab equipment tracking with barcode scan and instant state sync.",
-    detail:
+    tags: ["React", "Postgres", "Systems"],
+    body: [
       "Designed for high-contrast legibility under harsh lab lighting, with optimistic UI updates and audit trails.",
-    tags: ["React", "Postgres", "Systems"]
+      "Placeholder project writeup — built for quick check-in/check-out flows using hardware barcode scanners."
+    ]
   }
 ];
 
@@ -81,7 +98,11 @@ const ARTICLES = [
       "Interactive state changes (hover, press, tab switches) should stay between 140ms and 240ms. Entry reveals can breathe a little longer—around 600ms—as long as stagger delays stay tight (50–70ms per block) so the page never feels slow.",
       "<blockquote>Animation should clarify spatial relationships or reward curiosity, never delay reading.</blockquote>",
       "<pre><code>@keyframes blurReveal {\n  from {\n    opacity: 0;\n    filter: blur(10px);\n    transform: translateY(8px);\n  }\n  to {\n    opacity: 1;\n    filter: blur(0px);\n    transform: translateY(0);\n  }\n}</code></pre>",
-      "Pair this with <code>prefers-reduced-motion: reduce</code> so visitors who prefer static pages get instant, crisp text with zero delay."
+      "<h2>Spatial continuity</h2>",
+      "When navigating between an index list and a full essay, shared-element View Transitions preserve your mental map of where the text came from. The title glides into place rather than vanishing and reappearing.",
+      "Pair this with <code>prefers-reduced-motion: reduce</code> so visitors who prefer static pages get instant, crisp text with zero delay.",
+      "<h2>Scroll-driven restraint</h2>",
+      "Even scroll-linked effects work best when they stay quiet: a 1.5px reading hairline and soft edge blurs that fade away the moment you reach the top or bottom of the page."
     ]
   },
   {
@@ -191,6 +212,7 @@ const themeBtn = document.getElementById("theme-btn");
 const toastEl = document.getElementById("toast");
 let toastTimer = null;
 let lastArticleSlug = null;
+let lastProjectSlug = null;
 let archiveOpen = false;
 let archiveYear = null;
 
@@ -277,28 +299,18 @@ function renderHome(animateReveal = true) {
 
     <section class="section ${animateReveal ? "reveal" : ""}" style="--d:2;">
       <div class="section-header">
-        <h2 class="section-title"><span class="section-badge">P</span> Projects</h2>
+        <h2 class="section-title"><span class="section-badge">P</span> <span style="view-transition-name: projects-heading; display: inline-block;">Projects</span></h2>
         <a href="/projects" data-link class="section-action">All projects →</a>
       </div>
       <div class="list-group">
         ${PROJECTS.slice(0, 3)
           .map(
             (p) => `
-          <div class="project-item" data-project="${p.id}" style="view-transition-name: project-${p.id}">
-            <div class="list-row" role="button" tabindex="0" aria-expanded="false">
-              <div class="row-main">
-                <span class="row-title">${p.title} <span class="row-arrow">↗</span></span>
-                <span class="row-desc">${p.desc}</span>
-              </div>
-              <span class="row-meta">${p.year}</span>
+          <a href="/projects/${p.slug}" data-link data-project-slug="${p.slug}" class="list-row">
+            <div class="row-main">
+              <span class="row-title" style="${lastProjectSlug === p.slug ? "view-transition-name: vt-project-title" : ""}">${p.title}</span>
             </div>
-            <div class="project-detail">
-              <p>${p.detail}</p>
-              <div class="tag-row">
-                ${p.tags.map((t) => `<span class="tag">${t}</span>`).join("")}
-              </div>
-            </div>
-          </div>
+          </a>
         `
           )
           .join("")}
@@ -307,17 +319,16 @@ function renderHome(animateReveal = true) {
 
     <section class="section ${animateReveal ? "reveal" : ""}" style="--d:3;">
       <div class="section-header">
-        <h2 class="section-title"><span class="section-badge">W</span> Writing</h2>
+        <h2 class="section-title"><span class="section-badge">W</span> <span style="view-transition-name: writing-heading; display: inline-block;">Writing</span></h2>
         <a href="/writing" data-link class="section-action">All writing →</a>
       </div>
       <div class="list-group">
         ${recentArticles
           .map(
             (a) => `
-          <a href="/writing/${a.slug}" data-link data-slug="${a.slug}" class="list-row" style="view-transition-name: post-${a.slug}">
+          <a href="/writing/${a.slug}" data-link data-slug="${a.slug}" class="list-row">
             <div class="row-main">
               <span class="row-title" style="${lastArticleSlug === a.slug ? "view-transition-name: vt-article-title" : ""}">${a.title}</span>
-              <span class="row-desc">${a.excerpt}</span>
             </div>
             <span class="row-meta" style="${lastArticleSlug === a.slug ? "view-transition-name: vt-article-meta" : ""}">${a.date}</span>
           </a>
@@ -354,29 +365,20 @@ function renderHome(animateReveal = true) {
 function renderProjectsPage(animateReveal = true) {
   return `
     <section class="section">
-      <h1 class="hero-title ${animateReveal ? "reveal" : ""}" style="--d:0">Projects</h1>
+      <h1 class="hero-title ${animateReveal ? "reveal" : ""}" style="--d:0; view-transition-name: projects-heading">Projects</h1>
       <p class="hero-subtitle ${animateReveal ? "reveal" : ""}" style="--d:1; margin-bottom: 28px;">
-        Placeholder overview of selected software, experiments, and tools. Click any item to expand.
+        Placeholder overview of selected software, experiments, and tools.
       </p>
 
       <div class="list-group ${animateReveal ? "reveal" : ""}" style="--d:2">
         ${PROJECTS.map(
           (p) => `
-          <div class="project-item" data-project="${p.id}" style="view-transition-name: project-${p.id}">
-            <div class="list-row" role="button" tabindex="0" aria-expanded="false">
-              <div class="row-main">
-                <span class="row-title">${p.title} <span class="row-arrow">↗</span></span>
-                <span class="row-desc">${p.desc}</span>
-              </div>
-              <span class="row-meta">${p.year}</span>
+          <a href="/projects/${p.slug}" data-link data-project-slug="${p.slug}" class="list-row">
+            <div class="row-main">
+              <span class="row-title" style="${lastProjectSlug === p.slug ? "view-transition-name: vt-project-title" : ""}">${p.title}</span>
+              <span class="row-desc">${p.desc}</span>
             </div>
-            <div class="project-detail">
-              <p>${p.detail}</p>
-              <div class="tag-row">
-                ${p.tags.map((t) => `<span class="tag">${t}</span>`).join("")}
-              </div>
-            </div>
-          </div>
+          </a>
         `
         ).join("")}
       </div>
@@ -384,33 +386,110 @@ function renderProjectsPage(animateReveal = true) {
   `;
 }
 
-function renderWriting(animateReveal = true) {
-  const currentArticles = ARTICLES.filter((a) => a.year === CURRENT_YEAR);
+function renderProject(slug) {
+  const project = PROJECTS.find((p) => p.slug === slug);
+  if (!project) {
+    return `
+      <a href="/projects" data-link class="back-link">${RETURN_ICON} Projects</a>
+      <h1 class="hero-title">Project not found</h1>
+    `;
+  }
+
+  lastProjectSlug = slug;
+
+  return `
+    <a href="/projects" data-link class="back-link">${RETURN_ICON} Projects</a>
+    <article>
+      <header class="article-header">
+        <h1 class="article-title" style="view-transition-name: vt-project-title">${project.title}</h1>
+        <div class="article-meta">
+          <span>${project.year}</span>
+          ${project.liveUrl ? `<span>·</span><a href="${project.liveUrl}" target="_blank" rel="noreferrer" class="inline-link ext-link"><span class="ext-label">Live</span> <span class="ext-arrow">↗</span></a>` : ""}
+          ${project.repoUrl ? `<span>·</span><a href="${project.repoUrl}" target="_blank" rel="noreferrer" class="inline-link ext-link"><span class="ext-label">GitHub</span> <span class="ext-arrow">↗</span></a>` : ""}
+        </div>
+      </header>
+      <div class="prose reveal" style="--d:1">
+        ${project.body.map((block) => (block.startsWith("<") ? block : `<p>${block}</p>`)).join("")}
+      </div>
+    </article>
+  `;
+}
+
+function renderArchiveList(yearItems, animateList = false) {
+  return `
+    <div class="list-group ${animateList ? "archive-list-enter" : ""}">
+      ${yearItems
+        .map(
+          (a) => `
+        <a href="/writing/${a.slug}" data-link data-slug="${a.slug}" class="list-row">
+          <div class="row-main">
+            <span class="row-title" style="${lastArticleSlug === a.slug ? "view-transition-name: vt-article-title" : ""}">${a.title}</span>
+            <span class="row-desc">${a.excerpt}</span>
+          </div>
+          <span class="row-meta" style="${lastArticleSlug === a.slug ? "view-transition-name: vt-article-meta" : ""}">${a.date}</span>
+        </a>
+      `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderArchiveInner() {
   const archiveArticles = ARTICLES.filter((a) => a.year < CURRENT_YEAR);
   const archiveYears = [...new Set(archiveArticles.map((a) => a.year))].sort((a, b) => b - a);
   if (!archiveYear || !archiveYears.includes(archiveYear)) {
     archiveYear = archiveYears[0];
   }
-  const yearIndex = archiveYears.indexOf(archiveYear);
   const yearItems = archiveArticles.filter((a) => a.year === archiveYear);
 
   return `
+    <details id="archive-details" class="archive-details" ${archiveOpen ? "open" : ""}>
+      <summary class="archive-header">
+        <span class="archive-toggle">
+          <span class="archive-toggle-left">
+            <span class="archive-chevron">▸</span>
+            <span>Archive</span>
+          </span>
+        </span>
+
+        <div class="year-pills" id="archive-year-pills" ${archiveOpen ? "" : "hidden"}>
+          ${archiveYears
+            .map(
+              (y) =>
+                `<button type="button" class="year-pill ${y === archiveYear ? "active" : ""}" data-archive-year="${y}">${y}</button>`
+            )
+            .join("")}
+        </div>
+      </summary>
+
+      <div id="archive-list-wrap">
+        ${renderArchiveList(yearItems, false)}
+      </div>
+    </details>
+  `;
+}
+
+function renderWriting(animateReveal = true) {
+  const currentArticles = ARTICLES.filter((a) => a.year === CURRENT_YEAR);
+  const hasArchive = ARTICLES.some((a) => a.year < CURRENT_YEAR);
+
+  return `
     <section class="section">
-      <h1 class="hero-title ${animateReveal ? "reveal" : ""}" style="--d:0">Writing</h1>
+      <h1 class="hero-title ${animateReveal ? "reveal" : ""}" style="--d:0; view-transition-name: writing-heading">Writing</h1>
       <p class="hero-subtitle ${animateReveal ? "reveal" : ""}" style="--d:1; margin-bottom: 28px;">
         Essays and notes on interfaces, engineering, and craft.
       </p>
 
       <div class="section-header ${animateReveal ? "reveal" : ""}" style="--d:2">
         <h2 class="section-title">${CURRENT_YEAR}</h2>
-        <span class="row-meta">${currentArticles.length} posts</span>
       </div>
 
       <div class="list-group ${animateReveal ? "reveal" : ""}" style="--d:3">
         ${currentArticles
           .map(
             (a) => `
-          <a href="/writing/${a.slug}" data-link data-slug="${a.slug}" class="list-row" style="view-transition-name: post-${a.slug}">
+          <a href="/writing/${a.slug}" data-link data-slug="${a.slug}" class="list-row">
             <div class="row-main">
               <span class="row-title" style="${lastArticleSlug === a.slug ? "view-transition-name: vt-article-title" : ""}">${a.title}</span>
               <span class="row-desc">${a.excerpt}</span>
@@ -424,61 +503,8 @@ function renderWriting(animateReveal = true) {
     </section>
 
     ${
-      archiveYears.length > 0
-        ? `
-      <section class="section ${animateReveal ? "reveal" : ""}" style="--d:4; view-transition-name: archive-section;">
-        <div class="archive-header">
-          <button
-            type="button"
-            id="archive-toggle"
-            class="archive-toggle"
-            aria-expanded="${String(archiveOpen)}"
-          >
-            <span class="archive-toggle-left">
-              <span class="archive-chevron">▸</span>
-              <span>Archive</span>
-            </span>
-          </button>
-
-          ${
-            archiveOpen
-              ? `
-            <div class="year-pills">
-              ${archiveYears
-                .map(
-                  (y) =>
-                    `<button type="button" class="year-pill ${y === archiveYear ? "active" : ""}" data-archive-year="${y}">${y}</button>`
-                )
-                .join("")}
-            </div>
-          `
-              : ""
-          }
-        </div>
-
-        ${
-          archiveOpen
-            ? `
-          <div class="list-group" style="view-transition-name: archive-list">
-            ${yearItems
-              .map(
-                (a) => `
-              <a href="/writing/${a.slug}" data-link data-slug="${a.slug}" class="list-row">
-                <div class="row-main">
-                  <span class="row-title" style="${lastArticleSlug === a.slug ? "view-transition-name: vt-article-title" : ""}">${a.title}</span>
-                  <span class="row-desc">${a.excerpt}</span>
-                </div>
-                <span class="row-meta" style="${lastArticleSlug === a.slug ? "view-transition-name: vt-article-meta" : ""}">${a.date}</span>
-              </a>
-            `
-              )
-              .join("")}
-          </div>
-        `
-            : ""
-        }
-      </section>
-    `
+      hasArchive
+        ? `<section id="archive-section" class="section ${animateReveal ? "reveal" : ""}" style="--d:4">${renderArchiveInner(false)}</section>`
         : ""
     }
   `;
@@ -488,7 +514,7 @@ function renderArticle(slug) {
   const article = ARTICLES.find((a) => a.slug === slug);
   if (!article) {
     return `
-      <a href="/writing" data-link class="back-link">← Back to writing</a>
+      <a href="/writing" data-link class="back-link">${RETURN_ICON} Writing</a>
       <h1 class="hero-title">Article not found</h1>
     `;
   }
@@ -496,7 +522,7 @@ function renderArticle(slug) {
   lastArticleSlug = slug;
 
   return `
-    <a href="/writing" data-link class="back-link">← Writing</a>
+    <a href="/writing" data-link class="back-link">${RETURN_ICON} Writing</a>
     <article>
       <header class="article-header">
         <h1 class="article-title" style="view-transition-name: vt-article-title">${article.title}</h1>
@@ -589,40 +615,59 @@ function setActiveNav(path) {
   positionNavPill(activeEl);
 }
 
-function bindPageEvents() {
-  // Expandable project rows wrapped in View Transitions
-  document.querySelectorAll(".project-item").forEach((item) => {
-    const row = item.querySelector(".list-row");
-    const toggle = () => {
-      runVT(() => {
-        const open = item.classList.toggle("open");
-        row.setAttribute("aria-expanded", String(open));
-      });
-    };
-    row.addEventListener("click", toggle);
-    row.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggle();
-      }
-    });
-  });
+function bindArchiveEvents() {
+  const details = document.getElementById("archive-details");
+  if (!details) return;
 
-  // Archive collapse & year selector
-  const archiveToggle = document.getElementById("archive-toggle");
-  if (archiveToggle) {
-    archiveToggle.addEventListener("click", () => {
-      archiveOpen = !archiveOpen;
-      renderRoute("/writing", true, false);
-    });
-  }
+  const pillsWrap = document.getElementById("archive-year-pills");
+  const listWrap = document.getElementById("archive-list-wrap");
+
+  details.addEventListener("toggle", () => {
+    archiveOpen = details.open;
+    if (pillsWrap) pillsWrap.hidden = !archiveOpen;
+    syncScrollEffects();
+  });
 
   document.querySelectorAll("[data-archive-year]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      archiveYear = Number(btn.getAttribute("data-archive-year"));
-      renderRoute("/writing", true, false);
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const nextYear = Number(btn.getAttribute("data-archive-year"));
+      if (nextYear === archiveYear) return;
+      archiveYear = nextYear;
+      document.querySelectorAll("[data-archive-year]").forEach((b) => {
+        b.classList.toggle("active", Number(b.getAttribute("data-archive-year")) === archiveYear);
+      });
+      const yearItems = ARTICLES.filter((a) => a.year === archiveYear);
+      if (listWrap) listWrap.innerHTML = renderArchiveList(yearItems, true);
+      syncScrollEffects();
     });
   });
+}
+
+function syncScrollEffects() {
+  const progress = document.getElementById("scroll-progress");
+  const blurTop = document.getElementById("scroll-blur-top");
+  const blurBottom = document.getElementById("scroll-blur-bottom");
+  const path = window.location.pathname;
+  const isDetail = path.startsWith("/writing/") || path.startsWith("/projects/");
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  const isScrollable = maxScroll > 24;
+
+  if (progress) progress.hidden = !(isDetail && isScrollable);
+  if (blurTop) {
+    blurTop.hidden = !isScrollable;
+    blurTop.classList.toggle("visible", isScrollable && window.scrollY > 16);
+  }
+  if (blurBottom) {
+    blurBottom.hidden = !isScrollable;
+    blurBottom.classList.toggle("visible", isScrollable && window.scrollY < maxScroll - 16);
+  }
+}
+
+function bindPageEvents() {
+  bindArchiveEvents();
+  requestAnimationFrame(syncScrollEffects);
 }
 
 function renderRoute(path, useTransition = true, animateReveal = true) {
@@ -631,6 +676,8 @@ function renderRoute(path, useTransition = true, animateReveal = true) {
       appEl.innerHTML = renderHome(animateReveal);
     } else if (path === "/projects" || path === "/projects/") {
       appEl.innerHTML = renderProjectsPage(animateReveal);
+    } else if (path.startsWith("/projects/")) {
+      appEl.innerHTML = renderProject(path.replace("/projects/", ""));
     } else if (path === "/writing" || path === "/writing/") {
       appEl.innerHTML = renderWriting(animateReveal);
     } else if (path.startsWith("/writing/")) {
@@ -647,10 +694,21 @@ function renderRoute(path, useTransition = true, animateReveal = true) {
     }
   };
 
+  const clearDetailSlugs = () => {
+    if (!path.startsWith("/writing/")) lastArticleSlug = null;
+    if (!path.startsWith("/projects/")) lastProjectSlug = null;
+  };
+
   if (useTransition) {
-    runVT(updateDOM);
+    const vt = runVT(updateDOM);
+    if (vt && vt.finished) {
+      vt.finished.finally(clearDetailSlugs);
+    } else {
+      clearDetailSlugs();
+    }
   } else {
     updateDOM();
+    clearDetailSlugs();
   }
 }
 
@@ -668,6 +726,15 @@ function navigate(href, clickedLink) {
     const metaEl = clickedLink.querySelector(".row-meta");
     if (titleEl) titleEl.style.viewTransitionName = "vt-article-title";
     if (metaEl) metaEl.style.viewTransitionName = "vt-article-meta";
+  }
+
+  if (clickedLink && clickedLink.dataset.projectSlug) {
+    document.querySelectorAll("[data-project-slug]").forEach((el) => {
+      const t = el.querySelector(".row-title");
+      if (t) t.style.viewTransitionName = "";
+    });
+    const titleEl = clickedLink.querySelector(".row-title");
+    if (titleEl) titleEl.style.viewTransitionName = "vt-project-title";
   }
 
   history.pushState({}, "", href);
@@ -713,6 +780,8 @@ document.addEventListener("keydown", (e) => {
 initNavMagnet();
 renderThemeIcon();
 renderRoute(window.location.pathname, false, true);
+window.addEventListener("resize", syncScrollEffects);
+window.addEventListener("scroll", syncScrollEffects, { passive: true });
 
 function initNavMagnet() {
   const group = document.querySelector(".nav-group");
