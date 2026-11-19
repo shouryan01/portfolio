@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Projects — Shouryan Nikam">
+  <section class="section">
+    <h1 class="hero-title reveal" style="--d:0; view-transition-name: projects-heading">Projects</h1>
+    <p class="hero-subtitle reveal" style="--d:1; margin-bottom: 28px;">
+      Placeholder overview of selected software, experiments, and tools.
+    </p>
+
+    <div class="list-group reveal" style="--d:2">
+      {projects.map((p) => (
+        <a href={`/projects/${p.id}`} class="list-row">
+          <div class="row-main">
+            <span class="row-title">{p.data.title}</span>
+            <span class="row-desc">{p.data.desc}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,128 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { siteConfig } from "../../site.config";
+import { formatMonthYear, getYear } from "../../utils/date";
+
+const CURRENT_YEAR = siteConfig.writing.currentYear;
+
+const allWriting = (await getCollection("writing")).filter((a) => !a.data.draft);
+const currentArticles = allWriting
+  .filter((a) => getYear(a.data.date) === CURRENT_YEAR)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const archiveArticles = allWriting
+  .filter((a) => getYear(a.data.date) < CURRENT_YEAR)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const archiveYears = [...new Set(archiveArticles.map((a) => getYear(a.data.date)))].sort((a, b) => b - a);
+const defaultArchiveYear = archiveYears[0];
+---
+
+<BaseLayout title="Writing — Shouryan Nikam">
+  <section class="section">
+    <h1 class="hero-title reveal" style="--d:0; view-transition-name: writing-heading">Writing</h1>
+    <p class="hero-subtitle reveal" style="--d:1; margin-bottom: 28px;">
+      Essays and notes on interfaces, engineering, and craft.
+    </p>
+
+    <div class="section-header reveal" style="--d:2">
+      <h2 class="section-title">{CURRENT_YEAR}</h2>
+    </div>
+
+    <div class="list-group reveal" style="--d:3">
+      {currentArticles.map((a) => (
+        <a href={`/writing/${a.id}`} class="list-row">
+          <div class="row-main">
+            <span class="row-title">{a.data.title}</span>
+            <span class="row-desc">{a.data.excerpt}</span>
+          </div>
+          <span class="row-meta">{formatMonthYear(a.data.date)}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {archiveYears.length > 0 && (
+    <section id="archive-section" class="section reveal" style="--d:4">
+      <details id="archive-details" class="archive-details">
+        <summary class="archive-header">
+          <span class="archive-toggle">
+            <span class="archive-toggle-left">
+              <span class="archive-chevron">▸</span>
+              <span>Archive</span>
+            </span>
+          </span>
+
+          <div class="year-pills" id="archive-year-pills" hidden>
+            {archiveYears.map((y) => (
+              <button
+                type="button"
+                class={`year-pill ${y === defaultArchiveYear ? "active" : ""}`}
+                data-archive-year={y}
+              >
+                {y}
+              </button>
+            ))}
+          </div>
+        </summary>
+
+        <div id="archive-list-wrap" class="list-group">
+          {archiveArticles.map((a) => {
+            const itemYear = getYear(a.data.date);
+            return (
+              <a
+                href={`/writing/${a.id}`}
+                class="list-row"
+                data-item-year={itemYear}
+                hidden={itemYear !== defaultArchiveYear}
+              >
+                <div class="row-main">
+                  <span class="row-title">{a.data.title}</span>
+                  <span class="row-desc">{a.data.excerpt}</span>
+                </div>
+                <span class="row-meta">{formatMonthYear(a.data.date)}</span>
+              </a>
+            );
+          })}
+        </div>
+      </details>
+    </section>
+  )}
+</BaseLayout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const details = document.getElementById("archive-details") as HTMLDetailsElement | null;
+    if (!details || details.dataset.bound) return;
+    details.dataset.bound = "1";
+
+    const pillsWrap = document.getElementById("archive-year-pills");
+    const listWrap = document.getElementById("archive-list-wrap");
+
+    details.addEventListener("toggle", () => {
+      if (pillsWrap) pillsWrap.hidden = !details.open;
+      window.dispatchEvent(new Event("resize"));
+    });
+
+    details.querySelectorAll<HTMLButtonElement>("[data-archive-year]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const selectedYear = btn.getAttribute("data-archive-year");
+        details.querySelectorAll("[data-archive-year]").forEach((b) => {
+          b.classList.toggle("active", b.getAttribute("data-archive-year") === selectedYear);
+        });
+        details.querySelectorAll<HTMLElement>("[data-item-year]").forEach((item) => {
+          item.hidden = item.getAttribute("data-item-year") !== selectedYear;
+        });
+        if (listWrap) {
+          listWrap.classList.remove("archive-list-enter");
+          void listWrap.offsetWidth;
+          listWrap.classList.add("archive-list-enter");
+        }
+        window.dispatchEvent(new Event("resize"));
+      });
+    });
+  });
+</script>

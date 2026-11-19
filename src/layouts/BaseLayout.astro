@@ -1,0 +1,423 @@
+---
+import { ClientRouter } from "astro:transitions";
+import { siteConfig } from "../site.config";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  hideFooter?: boolean;
+  ogType?: "website" | "article";
+  publishedTime?: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title = siteConfig.name,
+  description = siteConfig.description,
+  hideFooter = false,
+  ogType = "website",
+  publishedTime,
+  jsonLd
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+
+const emailUserB64 = Buffer.from(siteConfig.email.user).toString("base64");
+const emailDomainB64 = Buffer.from(siteConfig.email.domain).toString("base64");
+const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <ClientRouter />
+    {cfAnalyticsToken && (
+      <script
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: cfAnalyticsToken })}
+      />
+    )}
+    <script is:inline>
+      (function () {
+        function applyState(doc, isSwap) {
+          try {
+            var saved = localStorage.getItem("theme");
+            var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            doc.documentElement.setAttribute(
+              "data-theme",
+              saved || (prefersDark ? "dark" : "light")
+            );
+            var seenHome = sessionStorage.getItem("home_seen") === "1";
+            if (isSwap || seenHome || window.location.pathname !== "/") {
+              doc.documentElement.setAttribute("data-fast-reveal", "true");
+            } else {
+              doc.documentElement.removeAttribute("data-fast-reveal");
+            }
+            if (window.location.pathname === "/") {
+              sessionStorage.setItem("home_seen", "1");
+            }
+          } catch (e) {}
+        }
+        applyState(document, false);
+        document.addEventListener("astro:before-swap", function (ev) {
+          applyState(ev.newDocument, true);
+          try {
+            var fromPath = window.location.pathname;
+            var toPath = new URL(ev.to).pathname;
+            if (fromPath.startsWith("/writing/") && (toPath === "/writing" || toPath === "/")) {
+              var aLink = ev.newDocument.querySelector('a[href="' + fromPath + '"]');
+              if (aLink) {
+                var aTitle = aLink.querySelector(".row-title");
+                var aMeta = aLink.querySelector(".row-meta");
+                if (aTitle) aTitle.style.viewTransitionName = "vt-article-title";
+                if (aMeta) aMeta.style.viewTransitionName = "vt-article-meta";
+              }
+            } else if (fromPath.startsWith("/projects/") && (toPath === "/projects" || toPath === "/")) {
+              var pLink = ev.newDocument.querySelector('a[href="' + fromPath + '"]');
+              if (pLink) {
+                var pTitle = pLink.querySelector(".row-title");
+                if (pTitle) pTitle.style.viewTransitionName = "vt-project-title";
+              }
+            }
+          } catch (e) {}
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="scroll-progress" class="scroll-progress" hidden aria-hidden="true"></div>
+    <div id="scroll-blur-top" class="scroll-blur-top" hidden aria-hidden="true">
+      <span class="blur-layer"></span>
+      <span class="blur-layer"></span>
+      <span class="blur-layer"></span>
+      <span class="blur-layer"></span>
+    </div>
+    <div id="scroll-blur-bottom" class="scroll-blur-bottom" hidden aria-hidden="true">
+      <span class="blur-layer"></span>
+      <span class="blur-layer"></span>
+      <span class="blur-layer"></span>
+      <span class="blur-layer"></span>
+    </div>
+
+    <div class="shell">
+      <header class="topbar" transition:name="topbar">
+        <a href="/" class="brand">{siteConfig.name}</a>
+
+        <nav class="nav-group" aria-label="Primary">
+          <a href="/writing" class="nav-link" data-nav="writing">Writing</a>
+          <a href="/projects" class="nav-link" data-nav="projects">Projects</a>
+          <a href="/about" class="nav-link" data-nav="about">About</a>
+        </nav>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      {!hideFooter && (
+        <footer class="footer" transition:name="footer">
+          <div class="footer-links">
+            <button
+              id="copy-email"
+              type="button"
+              class="inline-link"
+              data-u={emailUserB64}
+              data-d={emailDomainB64}
+            >Email</button>
+            <a href={siteConfig.links.github} target="_blank" rel="noreferrer" class="inline-link">GitHub</a>
+            <a href={siteConfig.links.linkedin} target="_blank" rel="noreferrer" class="inline-link">LinkedIn</a>
+
+            <span class="tooltip-wrap tooltip-wrap--top">
+              <button
+                id="theme-btn"
+                class="icon-btn"
+                aria-label="Toggle light and dark theme"
+              ></button>
+              <span class="tooltip" role="tooltip">Theme <kbd>T</kbd></span>
+            </span>
+          </div>
+        </footer>
+      )}
+    </div>
+
+    <script>
+      import { navigate } from "astro:transitions/client";
+
+      function getTheme(): string {
+        return document.documentElement.getAttribute("data-theme") || "light";
+      }
+
+      function updateFavicon(theme: string) {
+        const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+        if (!link) return;
+        const isDark = theme === "dark";
+        const bg = isDark ? "%23111111" : "%23ffffff";
+        const stroke = isDark ? "%232e2e33" : "%23d4d4d8";
+        const fg = isDark ? "%23ededed" : "%23111111";
+        link.href = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='1' y='1' width='30' height='30' rx='7.5' fill='${bg}' stroke='${stroke}' stroke-width='1.5'/><text x='50%25' y='53%25' dominant-baseline='middle' text-anchor='middle' fill='${fg}' font-family='Inter,-apple-system,sans-serif' font-size='21' font-weight='600'>S</text></svg>`;
+      }
+
+      function renderThemeIcon() {
+        const btn = document.getElementById("theme-btn");
+        if (!btn) return;
+        const theme = getTheme();
+        const dark = theme === "dark";
+        btn.innerHTML = dark
+          ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+        updateFavicon(theme);
+      }
+
+      function toggleTheme() {
+        const next = getTheme() === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        try {
+          localStorage.setItem("theme", next);
+        } catch {}
+        renderThemeIcon();
+      }
+
+      function swapEmailLabel(btn: HTMLElement, nextText: string) {
+        btn.animate(
+          [
+            { opacity: 1, filter: "blur(0px)", transform: "translateY(0)" },
+            { opacity: 0, filter: "blur(4px)", transform: "translateY(-2px)" }
+          ],
+          { duration: 110, easing: "ease-out" }
+        ).onfinish = () => {
+          btn.textContent = nextText;
+          btn.animate(
+            [
+              { opacity: 0, filter: "blur(4px)", transform: "translateY(2px)" },
+              { opacity: 1, filter: "blur(0px)", transform: "translateY(0)" }
+            ],
+            { duration: 150, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+          );
+        };
+      }
+
+      function initCodeCopyButtons() {
+        document.querySelectorAll<HTMLPreElement>(".prose pre").forEach((pre) => {
+          if (pre.parentElement?.classList.contains("code-wrap")) return;
+          const wrap = document.createElement("div");
+          wrap.className = "code-wrap";
+          pre.parentNode?.insertBefore(wrap, pre);
+          wrap.appendChild(pre);
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "code-copy-btn";
+          btn.textContent = "Copy";
+          btn.addEventListener("click", async () => {
+            const text = pre.innerText || "";
+            try {
+              await navigator.clipboard.writeText(text);
+            } catch {}
+            btn.classList.add("copied");
+            btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="check-path" d="M4 12.5 9.5 18 20 6"/></svg><span>Copied</span>`;
+            setTimeout(() => {
+              btn.classList.remove("copied");
+              btn.textContent = "Copy";
+            }, 1600);
+          });
+          wrap.appendChild(btn);
+        });
+      }
+
+      function getNavPill(): HTMLElement | null {
+        const group = document.querySelector(".nav-group");
+        if (!group) return null;
+        let pill = group.querySelector<HTMLElement>(".nav-bg-pill");
+        if (!pill) {
+          pill = document.createElement("span");
+          pill.className = "nav-bg-pill";
+          pill.setAttribute("aria-hidden", "true");
+          group.prepend(pill);
+        }
+        return pill;
+      }
+
+      function positionNavPill(targetEl: HTMLElement | null) {
+        const pill = getNavPill();
+        if (!pill) return;
+        pill.style.transition =
+          "transform 380ms var(--ease-spring), width 380ms var(--ease-spring), opacity 160ms ease";
+        if (!targetEl) {
+          pill.style.opacity = "0";
+          return;
+        }
+        pill.style.opacity = "1";
+        pill.style.width = `${targetEl.offsetWidth}px`;
+        pill.style.transform = `translate3d(${targetEl.offsetLeft}px, 0, 0)`;
+      }
+
+      function setActiveNav() {
+        const path = window.location.pathname;
+        let activeEl: HTMLElement | null = null;
+        document.querySelectorAll<HTMLElement>("[data-nav]").forEach((el) => {
+          const key = el.getAttribute("data-nav");
+          const active =
+            (key === "projects" && path.startsWith("/projects")) ||
+            (key === "writing" && path.startsWith("/writing")) ||
+            (key === "about" && path.startsWith("/about"));
+
+          el.classList.toggle("active", active);
+          if (active) activeEl = el;
+        });
+        positionNavPill(activeEl);
+      }
+
+      function initNavMagnet() {
+        const group = document.querySelector<HTMLElement>(".nav-group");
+        if (!group || group.dataset.magnetBound) return;
+        group.dataset.magnetBound = "1";
+
+        group.addEventListener("pointermove", (e) => {
+          const activeTab = group.querySelector<HTMLElement>(".nav-link.active");
+          const pill = getNavPill();
+          if (!activeTab || !pill) return;
+
+          const hoveredLink = (e.target as HTMLElement).closest(".nav-link");
+          if (!hoveredLink || hoveredLink === activeTab) {
+            pill.style.transition =
+              "transform 280ms var(--ease-spring), width 280ms var(--ease-spring), opacity 160ms ease";
+            pill.style.transform = `translate3d(${activeTab.offsetLeft}px, 0, 0)`;
+            return;
+          }
+
+          const activeRect = activeTab.getBoundingClientRect();
+          const activeCenterX = activeRect.left + activeRect.width / 2;
+          const activeCenterY = activeRect.top + activeRect.height / 2;
+
+          const dx = Math.max(-7, Math.min(7, (e.clientX - activeCenterX) * 0.08));
+          const dy = Math.max(-2, Math.min(2, (e.clientY - activeCenterY) * 0.12));
+
+          pill.style.transition =
+            "transform 70ms linear, width 280ms var(--ease-spring), opacity 160ms ease";
+          pill.style.transform = `translate3d(${(activeTab.offsetLeft + dx).toFixed(1)}px, ${dy.toFixed(1)}px, 0)`;
+        });
+
+        group.addEventListener("pointerleave", () => {
+          const activeTab = group.querySelector<HTMLElement>(".nav-link.active");
+          positionNavPill(activeTab);
+        });
+      }
+
+      function syncScrollEffects() {
+        const progress = document.getElementById("scroll-progress");
+        const blurTop = document.getElementById("scroll-blur-top");
+        const blurBottom = document.getElementById("scroll-blur-bottom");
+        const path = window.location.pathname;
+        const isDetail =
+          (path.startsWith("/writing/") && path.length > "/writing/".length) ||
+          (path.startsWith("/projects/") && path.length > "/projects/".length);
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const isScrollable = maxScroll > 24;
+
+        if (progress) progress.hidden = !(isDetail && isScrollable);
+        if (blurTop) {
+          blurTop.hidden = !isScrollable;
+          blurTop.classList.toggle("visible", isScrollable && window.scrollY > 16);
+        }
+        if (blurBottom) {
+          blurBottom.hidden = !isScrollable;
+          blurBottom.classList.toggle("visible", isScrollable && window.scrollY < maxScroll - 16);
+        }
+      }
+
+      function bindGlobalControls() {
+        const themeBtn = document.getElementById("theme-btn");
+        if (themeBtn && !themeBtn.dataset.bound) {
+          themeBtn.dataset.bound = "1";
+          themeBtn.addEventListener("click", toggleTheme);
+        }
+
+        const copyBtn = document.getElementById("copy-email");
+        if (copyBtn && !copyBtn.dataset.bound) {
+          copyBtn.dataset.bound = "1";
+          copyBtn.addEventListener("click", async () => {
+            const u = copyBtn.dataset.u || "";
+            const d = copyBtn.dataset.d || "";
+            const addr = `${atob(u)}@${atob(d)}`;
+            try {
+              await navigator.clipboard.writeText(addr);
+            } catch {}
+            swapEmailLabel(copyBtn, "Copied!");
+            setTimeout(() => swapEmailLabel(copyBtn, "Email"), 1600);
+          });
+        }
+      }
+
+      // One-time global listeners
+      if (!(window as any).__portfolioInit) {
+        (window as any).__portfolioInit = true;
+
+        document.addEventListener("keydown", (e) => {
+          if (e.metaKey || e.ctrlKey || e.altKey) return;
+          const tag = document.activeElement?.tagName;
+          if (tag === "INPUT" || tag === "TEXTAREA") return;
+
+          const key = e.key.toLowerCase();
+          if (key === "h" && window.location.pathname !== "/") navigate("/");
+          if (key === "p" && window.location.pathname !== "/projects") navigate("/projects");
+          if (key === "w" && window.location.pathname !== "/writing") navigate("/writing");
+          if (key === "a" && window.location.pathname !== "/about") navigate("/about");
+          if (key === "t") toggleTheme();
+        });
+
+        document.addEventListener("click", (e) => {
+          const link = (e.target as HTMLElement).closest("a");
+          if (!link) return;
+          const href = link.getAttribute("href") || "";
+          if (href.startsWith("/writing/") && href.length > "/writing/".length) {
+            const titleEl = link.querySelector<HTMLElement>(".row-title");
+            const metaEl = link.querySelector<HTMLElement>(".row-meta");
+            if (titleEl) titleEl.style.viewTransitionName = "vt-article-title";
+            if (metaEl) metaEl.style.viewTransitionName = "vt-article-meta";
+          } else if (href.startsWith("/projects/") && href.length > "/projects/".length) {
+            const titleEl = link.querySelector<HTMLElement>(".row-title");
+            if (titleEl) titleEl.style.viewTransitionName = "vt-project-title";
+          }
+        });
+
+        window.addEventListener("resize", syncScrollEffects);
+        window.addEventListener("scroll", syncScrollEffects, { passive: true });
+      }
+
+      document.addEventListener("astro:page-load", () => {
+        renderThemeIcon();
+        initNavMagnet();
+        setActiveNav();
+        bindGlobalControls();
+        initCodeCopyButtons();
+        requestAnimationFrame(syncScrollEffects);
+      });
+    </script>
+  </body>
+</html>
