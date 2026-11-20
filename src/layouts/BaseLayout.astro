@@ -32,7 +32,8 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     <meta property="og:title" content={title} />
@@ -69,10 +70,12 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
           try {
             var saved = localStorage.getItem("theme");
             var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            doc.documentElement.setAttribute(
-              "data-theme",
-              saved || (prefersDark ? "dark" : "light")
-            );
+            var theme = saved || (prefersDark ? "dark" : "light");
+            doc.documentElement.setAttribute("data-theme", theme);
+            var themeMeta = doc.querySelector('meta[name="theme-color"]');
+            if (themeMeta) {
+              themeMeta.setAttribute("content", theme === "dark" ? "#0a0a0a" : "#ffffff");
+            }
             var seenHome = sessionStorage.getItem("home_seen") === "1";
             if (isSwap || seenHome || window.location.pathname !== "/") {
               doc.documentElement.setAttribute("data-fast-reveal", "true");
@@ -116,10 +119,8 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
       <span class="blur-layer"></span>
       <span class="blur-layer"></span>
       <span class="blur-layer"></span>
-      <span class="blur-layer"></span>
     </div>
     <div id="scroll-blur-bottom" class="scroll-blur-bottom" hidden aria-hidden="true">
-      <span class="blur-layer"></span>
       <span class="blur-layer"></span>
       <span class="blur-layer"></span>
       <span class="blur-layer"></span>
@@ -183,15 +184,23 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         link.href = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='1' y='1' width='30' height='30' rx='7.5' fill='${bg}' stroke='${stroke}' stroke-width='1.5'/><text x='50%25' y='53%25' dominant-baseline='middle' text-anchor='middle' fill='${fg}' font-family='Inter,-apple-system,sans-serif' font-size='21' font-weight='600'>S</text></svg>`;
       }
 
+      function updateThemeColor(theme: string) {
+        const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+        if (meta) {
+          meta.content = theme === "dark" ? "#0a0a0a" : "#ffffff";
+        }
+      }
+
       function renderThemeIcon() {
         const btn = document.getElementById("theme-btn");
-        if (!btn) return;
         const theme = getTheme();
+        updateThemeColor(theme);
+        updateFavicon(theme);
+        if (!btn) return;
         const dark = theme === "dark";
         btn.innerHTML = dark
           ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`
           : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
-        updateFavicon(theme);
       }
 
       function toggleTheme() {
@@ -203,7 +212,38 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         renderThemeIcon();
       }
 
+      async function copyText(text: string): Promise<boolean> {
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(text);
+            return true;
+          } catch {}
+        }
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          ta.style.pointerEvents = "none";
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand("copy");
+          ta.remove();
+          return ok;
+        } catch {
+          return false;
+        }
+      }
+
       function swapEmailLabel(btn: HTMLElement, nextText: string) {
+        if (
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+          typeof btn.animate !== "function"
+        ) {
+          btn.textContent = nextText;
+          return;
+        }
         btn.animate(
           [
             { opacity: 1, filter: "blur(0px)", transform: "translateY(0)" },
@@ -236,9 +276,7 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
           btn.textContent = "Copy";
           btn.addEventListener("click", async () => {
             const text = pre.innerText || "";
-            try {
-              await navigator.clipboard.writeText(text);
-            } catch {}
+            await copyText(text);
             btn.classList.add("copied");
             btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="check-path" d="M4 12.5 9.5 18 20 6"/></svg><span>Copied</span>`;
             setTimeout(() => {
@@ -298,36 +336,85 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         if (!group || group.dataset.magnetBound) return;
         group.dataset.magnetBound = "1";
 
+        let cachedCenterX = 0;
+        let cachedCenterY = 0;
+        let cachedLeft = 0;
+        let isPulling = false;
+        let rafId = 0;
+        let pendingX = 0;
+        let pendingY = 0;
+
+        function refreshActiveMetrics() {
+          const activeTab = group?.querySelector<HTMLElement>(".nav-link.active");
+          if (!activeTab) return null;
+          const rect = activeTab.getBoundingClientRect();
+          cachedCenterX = rect.left + rect.width / 2;
+          cachedCenterY = rect.top + rect.height / 2;
+          cachedLeft = activeTab.offsetLeft;
+          return activeTab;
+        }
+
+        group.addEventListener("pointerenter", (e) => {
+          if (e.pointerType !== "mouse") return;
+          refreshActiveMetrics();
+        });
+
         group.addEventListener("pointermove", (e) => {
+          if (e.pointerType !== "mouse") return;
           const activeTab = group.querySelector<HTMLElement>(".nav-link.active");
           const pill = getNavPill();
           if (!activeTab || !pill) return;
 
           const hoveredLink = (e.target as HTMLElement).closest(".nav-link");
           if (!hoveredLink || hoveredLink === activeTab) {
-            pill.style.transition =
-              "transform 280ms var(--ease-spring), width 280ms var(--ease-spring), opacity 160ms ease";
-            pill.style.transform = `translate3d(${activeTab.offsetLeft}px, 0, 0)`;
+            if (isPulling) {
+              isPulling = false;
+              if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = 0;
+              }
+              pill.style.transition =
+                "transform 240ms var(--ease-spring), width 240ms var(--ease-spring), opacity 140ms ease";
+              pill.style.transform = `translate3d(${activeTab.offsetLeft}px, 0, 0)`;
+            }
             return;
           }
 
-          const activeRect = activeTab.getBoundingClientRect();
-          const activeCenterX = activeRect.left + activeRect.width / 2;
-          const activeCenterY = activeRect.top + activeRect.height / 2;
+          if (!isPulling) {
+            refreshActiveMetrics();
+            isPulling = true;
+            pill.style.transition =
+              "transform 60ms linear, width 240ms var(--ease-spring), opacity 140ms ease";
+          }
 
-          const dx = Math.max(-7, Math.min(7, (e.clientX - activeCenterX) * 0.08));
-          const dy = Math.max(-2, Math.min(2, (e.clientY - activeCenterY) * 0.12));
-
-          pill.style.transition =
-            "transform 70ms linear, width 280ms var(--ease-spring), opacity 160ms ease";
-          pill.style.transform = `translate3d(${(activeTab.offsetLeft + dx).toFixed(1)}px, ${dy.toFixed(1)}px, 0)`;
+          pendingX = e.clientX;
+          pendingY = e.clientY;
+          if (!rafId) {
+            rafId = requestAnimationFrame(() => {
+              rafId = 0;
+              if (!isPulling) return;
+              const dx = Math.max(-7, Math.min(7, (pendingX - cachedCenterX) * 0.08));
+              const dy = Math.max(-2, Math.min(2, (pendingY - cachedCenterY) * 0.12));
+              pill.style.transform = `translate3d(${(cachedLeft + dx).toFixed(1)}px, ${dy.toFixed(1)}px, 0)`;
+            });
+          }
         });
 
         group.addEventListener("pointerleave", () => {
+          isPulling = false;
+          if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = 0;
+          }
           const activeTab = group.querySelector<HTMLElement>(".nav-link.active");
           positionNavPill(activeTab);
         });
       }
+
+      const supportsScrollTimeline =
+        typeof CSS !== "undefined" &&
+        typeof CSS.supports === "function" &&
+        CSS.supports("animation-timeline", "scroll(root)");
 
       function syncScrollEffects() {
         const progress = document.getElementById("scroll-progress");
@@ -340,7 +427,14 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         const isScrollable = maxScroll > 24;
 
-        if (progress) progress.hidden = !(isDetail && isScrollable);
+        if (progress) {
+          const showProgress = isDetail && isScrollable;
+          progress.hidden = !showProgress;
+          if (showProgress && !supportsScrollTimeline) {
+            const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+            progress.style.transform = `scaleX(${ratio.toFixed(4)})`;
+          }
+        }
         if (blurTop) {
           blurTop.hidden = !isScrollable;
           blurTop.classList.toggle("visible", isScrollable && window.scrollY > 16);
@@ -349,6 +443,22 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
           blurBottom.hidden = !isScrollable;
           blurBottom.classList.toggle("visible", isScrollable && window.scrollY < maxScroll - 16);
         }
+      }
+
+      function initRevealCleanup() {
+        document.querySelectorAll<HTMLElement>(".reveal:not(.revealed)").forEach((el) => {
+          if (el.dataset.revealBound) return;
+          el.dataset.revealBound = "1";
+          el.addEventListener(
+            "animationend",
+            (e) => {
+              if (e.animationName === "blurReveal") {
+                el.classList.add("revealed");
+              }
+            },
+            { once: true }
+          );
+        });
       }
 
       function bindGlobalControls() {
@@ -365,9 +475,7 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
             const u = copyBtn.dataset.u || "";
             const d = copyBtn.dataset.d || "";
             const addr = `${atob(u)}@${atob(d)}`;
-            try {
-              await navigator.clipboard.writeText(addr);
-            } catch {}
+            await copyText(addr);
             swapEmailLabel(copyBtn, "Copied!");
             setTimeout(() => swapEmailLabel(copyBtn, "Email"), 1600);
           });
@@ -406,7 +514,10 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
           }
         });
 
-        window.addEventListener("resize", syncScrollEffects);
+        window.addEventListener("resize", () => {
+          syncScrollEffects();
+          setActiveNav();
+        });
         window.addEventListener("scroll", syncScrollEffects, { passive: true });
       }
 
@@ -416,6 +527,7 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         setActiveNav();
         bindGlobalControls();
         initCodeCopyButtons();
+        initRevealCleanup();
         requestAnimationFrame(syncScrollEffects);
       });
     </script>
