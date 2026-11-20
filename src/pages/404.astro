@@ -19,6 +19,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </svg>
       <span id="nf-hint" class="nf-hint">nothing at this url</span>
     </div>
+
+    <div class="nf-actions reveal" style="--d:1">
+      <a href="/" class="back-link" style="margin-bottom: 0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 10 4 15 9 20" />
+          <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+        </svg>
+        Back home
+      </a>
+    </div>
   </section>
 </BaseLayout>
 
@@ -98,10 +108,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const eyeL = document.getElementById("nf-eye-l");
     const eyeR = document.getElementById("nf-eye-r");
     const hint = document.getElementById("nf-hint");
+    const isTouch = window.matchMedia("(hover: none)").matches;
     const hints = [
       "nothing at this url",
       "still looking...",
-      "Hit h on keyboard",
+      isTouch ? "tap back home below" : "Hit h on keyboard",
       "404 · lost in transit"
     ];
     let hintIdx = 0;

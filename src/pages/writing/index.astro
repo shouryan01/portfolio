@@ -99,6 +99,64 @@ const defaultArchiveYear = archiveYears[0];
 
     const pillsWrap = document.getElementById("archive-year-pills");
     const listWrap = document.getElementById("archive-list-wrap");
+    const summary = details.querySelector("summary");
+
+    const supportsInterpolateSize =
+      typeof CSS !== "undefined" &&
+      typeof CSS.supports === "function" &&
+      CSS.supports("interpolate-size", "allow-keywords");
+
+    if (!supportsInterpolateSize && summary && listWrap) {
+      let anim: Animation | null = null;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      summary.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).closest("[data-archive-year]")) return;
+        if (reducedMotion.matches) return;
+
+        e.preventDefault();
+        if (anim) {
+          anim.cancel();
+          anim = null;
+        }
+
+        if (!details.open) {
+          details.open = true;
+          if (pillsWrap) pillsWrap.hidden = false;
+          const endHeight = listWrap.scrollHeight;
+          listWrap.style.overflow = "hidden";
+          anim = listWrap.animate(
+            [
+              { height: "0px", opacity: 0 },
+              { height: `${endHeight}px`, opacity: 1 }
+            ],
+            { duration: 240, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+          );
+          anim.onfinish = () => {
+            listWrap.style.overflow = "";
+            anim = null;
+            window.dispatchEvent(new Event("resize"));
+          };
+        } else {
+          const startHeight = listWrap.offsetHeight;
+          listWrap.style.overflow = "hidden";
+          anim = listWrap.animate(
+            [
+              { height: `${startHeight}px`, opacity: 1 },
+              { height: "0px", opacity: 0 }
+            ],
+            { duration: 200, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+          );
+          anim.onfinish = () => {
+            details.open = false;
+            if (pillsWrap) pillsWrap.hidden = true;
+            listWrap.style.overflow = "";
+            anim = null;
+            window.dispatchEvent(new Event("resize"));
+          };
+        }
+      });
+    }
 
     details.addEventListener("toggle", () => {
       if (pillsWrap) pillsWrap.hidden = !details.open;
